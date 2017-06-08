@@ -1,0 +1,815 @@
+\documentclass[english,serif,mathserif,xcolor=pdftex,dvipsnames,table]{beamer}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usetheme[informal]{s3it}
+\usepackage{s3it}
+
+\title[9. Object-orientation]{%
+  A Short and Incomplete Introduction to Python
+}
+\subtitle{\bfseries Part 9: Object-oriented programming}
+\author[R.~Murri]{%
+  Riccardo Murri \texttt{<riccardo.murri@uzh.ch>}
+  \\
+  S3IT: Services and Support for Science IT,
+  \\
+  University of Zurich
+}
+\date{June~8, 2017}
+
+
+%% simulate IPython prompt
+\newcounter{prompt}
+\newcommand\In{%
+  \global\def\promptnr{\arabic{prompt}}%
+  \stepcounter{prompt}%
+  {\color{blue}\bfseries In~[\promptnr]:}%
+}
+\newcommand\Out{{\color{red}\bfseries Out[\promptnr]:}}
+\newcommand\Ct{{\color{blue}   ...:}}
+
+\begin{document}
+
+% title frame
+\maketitle
+
+
+\part{Objects}
+
+\begin{frame}
+  \frametitle{What's an \emph{object}?}
+  \textbf{A Python object is a bundle of variables and functions.}
+
+  \+
+  What variable names and functions comprise an object is defined
+  by the object's \emph{class}.
+
+  \+
+  From one class specification, many objects can be
+  \emph{instanciated}.  Different instances can assign different
+  values to the object variables.
+
+  \+
+  Variables and functions in an instance are collectively called
+  \emph{instance attributes}; functions are also termed \emph{instance
+    methods}.
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Example: the \texttt{datetime} object, I}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+\begin{lstlisting}
+>>> from datetime import date
+>>> ~\HL{dt1 = date(2012, 9, 28)}~
+>>> dt2 = date(2012, 10, 1)
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \raggedleft
+      To instanciate an object, call the class name like a
+      function.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Example: the \texttt{datetime} object, II}
+\begin{lstlisting}
+>>> dir(dt1)
+['__add__', '__class__', ~\ldots~, 'ctime', 'day',
+'fromordinal', 'fromtimestamp', 'isocalendar',
+'isoformat', 'isoweekday', 'max', 'min', 'month',
+'replace', 'resolution', 'strftime', 'timetuple',
+'today', 'toordinal', 'weekday', 'year']
+\end{lstlisting}
+
+  \+
+  The \texttt{dir} function can list all objects attributes.
+
+  \+
+  Note there is no distinction between instance variables and
+  methods!
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Example: the \texttt{datetime} object, III}
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+\begin{lstlisting}
+>>> dt1.day
+28
+>>> dt1.month
+9
+>>> dt1.year
+2012
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \raggedleft
+      Access to object attributes is done by suffixing the
+      instance name with the attribute name, separated by a dot
+      ``\texttt{.}''.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Example: the \texttt{datetime} object, IV}
+  \begin{columns}[c]
+    \begin{column}[b]{0.5\textwidth}
+\begin{lstlisting}
+>>> dt1 = date(2012, 9, 28)
+>>> dt2 = date(2012, 10, 1)
+
+>>> dt1.day
+~\HL{28}~
+>>> dt2.day
+~\HL{1}~
+\end{lstlisting}
+    \end{column}
+    \begin{column}[b]{0.5\textwidth}
+      \raggedleft
+      The same attribute can have different
+      values in different instances!
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Instance methods}
+\begin{lstlisting}[showstringspaces=false]
+>>> dt1.isoformat()
+'2012-09-28'
+\end{lstlisting}
+
+  \+
+  Invoke an instance method just like any other function.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Objects \emph{vs} modules}
+
+  Modules are also namespaces of variables and functions.
+
+  \+
+  The dot operator `\texttt{.}' is also used to access variables
+  and functions from modules.  The \texttt{dir()} function is also
+  used to list variables and functions from modules.
+
+  \+
+  But each module has \emph{one and only one} instance in a Python
+  program.
+\end{frame}
+
+
+\part{User-defined classes}
+
+\begin{frame}[fragile]
+  \frametitle{A \emph{2D vector} in Python}
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+\begin{lstlisting}
+class Vector(object):
+  """A 2D Vector."""
+  def __init__(self, x, y):
+    self.x = x
+    self.y = y
+  def add(self, other):
+    return Vector(self.x+other.x,
+                  self.y+other.y)
+  def mul(self, scalar):
+    return Vector(scalar*self.x, scalar*self.y)
+  def show(self):
+    return ("<%g,%g>" % (self.x, self.y))
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \raggedleft
+      This code defines a Python object that implements a 2D vector.
+    \end{column}
+  \end{columns}
+
+  \+
+  {\scriptsize Source code available at:
+    \url{https://raw.github.com/gc3-uzh-ch/python-course/master/vector.py}}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{What does \texttt{Vector} do?}
+  \begin{columns}
+    \begin{column}[t]{0.5\linewidth}
+  We can create vectors by initializing them with the two coordinates
+  $(x,y)$:
+\begin{lstlisting}
+>>> u = Vector(1,0)
+>>> v = Vector(0,1)
+\end{lstlisting}
+    \end{column}
+    \begin{column}[t]{0.5\linewidth}
+      The \texttt{show} method shows vector coordinates:
+\begin{lstlisting}
+>>> u.show()
+'<1,0>'
+>>> v.show()
+'<0,1>'
+\end{lstlisting}
+    \end{column}
+  \end{columns}
+
+  \+
+  \begin{columns}
+    \begin{column}[t]{0.5\linewidth}
+      The \texttt{add} method implements vector addition:
+\begin{lstlisting}
+>>> w = u.add(v)
+>>> w.show()
+'<1,1>'
+\end{lstlisting}
+    \end{column}
+    \begin{column}[t]{0.5\linewidth}
+      The \texttt{mul} method implements scalar multiplication:
+\begin{lstlisting}
+>>> v2 = v.mul(2)
+>>> v2.show()
+'<0,2>'
+\end{lstlisting}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{User-defined classes, I}
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+\begin{lstlisting}
+~\HL{class}~ Vector(object):
+  """A 2D Vector."""
+  def __init__(self, x, y):
+    self.x = x
+    self.y = y
+  def add(self, other):
+    return Vector(self.x+other.x,
+                  self.y+other.y)
+  def mul(self, scalar):
+    return Vector(scalar*self.x, scalar*self.y)
+  def show(self):
+    return ("<%g,%g>" % (self.x, self.y))
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \raggedleft
+      A class definition starts with the keyword \texttt{class}.
+
+      The class definition is indented relative to the \texttt{class}
+      statement.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{User-defined classes, II}
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+\begin{lstlisting}
+class Vector~\HL{(object)}~:
+  """A 2D Vector."""
+  def __init__(self, x, y):
+    self.x = x
+    self.y = y
+  def add(self, other):
+    return Vector(self.x+other.x,
+                  self.y+other.y)
+  def mul(self, scalar):
+    return Vector(scalar*self.x, scalar*self.y)
+  def show(self):
+    return ("<%g,%g>" % (self.x, self.y))
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \raggedleft
+      This identifies user-defined~classes.
+
+      \+
+      (Do not leave it out or you'll get an ``old-style'' class, which
+      is deprecated behavior.)
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{User-defined classes, II}
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+\begin{lstlisting}
+class Vector(object):
+  ~\HL{"""A 2D Vector."""}~
+  def __init__(self, x, y):
+    self.x = x
+    self.y = y
+  def add(self, other):
+    return Vector(self.x+other.x,
+                  self.y+other.y)
+  def mul(self, scalar):
+    return Vector(scalar*self.x, scalar*self.y)
+  def show(self):
+    return ("<%g,%g>" % (self.x, self.y))
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \raggedleft
+      Classes can have docstrings.
+
+      The content of a class docstring will be shown as help text for
+      that class.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{User-defined classes, IV}
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+\begin{lstlisting}
+class Vector(object):
+  """A 2D Vector."""
+  ~\HL{\textbf{def} \_\_init\_\_(\textbf{self}, x, y):}~
+    self.x = x
+    self.y = y
+  def add(self, other):
+    return Vector(self.x+other.x,
+                  self.y+other.y)
+  def mul(self, scalar):
+    return Vector(scalar*self.x, scalar*self.y)
+  def show(self):
+    return ("<%g,%g>" % (self.x, self.y))
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \raggedleft
+      The {\bf def} keyword introduces a method~definition.
+
+      \+
+      Every method \emph{must} have at~least one argument,
+      named~{\bf self}.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{The \texttt{self} argument}
+
+  \textbf{Every method of a Python object always has \texttt{self}
+    as first argument.}
+
+  \+
+  However, you do not specify it when calling a method: it's
+  automatically inserted by Python:
+\begin{lstlisting}
+>>> class ShowSelf(object):
+...   def show(self):
+...     print(self)
+...
+>>> x = ShowSelf() # construct instance
+>>> x.show() # `self' automatically inserted!
+<__main__.ShowSelf object at 0x299e150>
+\end{lstlisting}
+
+  \+
+  The \texttt{self} name is a reference to the object instance
+  itself.  You \emph{need to} use \texttt{self} when accessing methods
+  or attributes of this instance.
+\end{frame}
+
+
+% \begin{frame}
+%   \frametitle{No access control}
+%   There are no ``public''/``private''/etc. qualifiers for object
+%   attributes.
+
+%   \+
+%   \textbf{\emph{Any} code can create/read/overwrite/delete \emph{any} attribute on
+%     \emph{any} object.}
+
+%   \+
+%   There are \emph{conventions}, though:
+%   \begin{itemize}
+%   \item ``protected'' attributes: \texttt{\_name}
+%   \item ``private'' attributes: \texttt{\_\_name}
+%   \end{itemize}
+%   (But again, note that this is not \emph{enforced} by the system in
+%   any way.)
+
+% \end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Name resolution rules, I}
+  \small
+
+  Within a function body, names are resolved according to \href{http://stackoverflow.com/questions/291978/short-description-of-python-scoping-rules/292502#292502}{the LEGB rule}:
+  \begin{description}
+  \item[L] Local scope: any names defined in the current function;
+  \item[E] Enclosing function scope: names defined in enclosing
+    functions (outermost last);
+  \item[G] global scope: names defined in the toplevel of the enclosing module;
+  \item[B] Built-in names (i.e., Python's \texttt{\_\_builtins\_\_} module).
+  \end{description}
+
+  \+
+  \textbf{Any name that is not in one of the above scopes \emph{must}
+    be qualified.}
+
+  \+
+  So you have to write \texttt{self.x} to reference an attribute in
+  this instance, \texttt{datetime.date} to mean a class defined in module
+  \texttt{date}, etc.
+
+  % \begin{references}
+  %   \url{http://stackoverflow.com/questions/291978/short-description-of-python-scoping-rules/292502#292502}
+  % \end{references}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Name resolution rules, II}
+  \begin{columns}
+    \begin{column}[t]{0.6\linewidth}
+\begin{lstlisting}
+import datetime as dt
+
+def today():
+  ~\HL{td}~ = dt.date.today()
+  return "today is " + ~\HL{td}~.isoformat()
+
+def hey(~\HL{name}~):
+  print("Hey " + ~\HL{name}~ + "; " + today())
+
+hey("you")
+\end{lstlisting}
+    \end{column}
+    \begin{column}[t]{0.4\linewidth}
+      \raggedleft
+      Unqualified name within a function: resolves to a local variable.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Name resolution rules, III}
+  \begin{columns}
+    \begin{column}[t]{0.6\linewidth}
+\begin{lstlisting}
+import datetime as dt
+
+def today():
+  td = dt.date.today()
+  return "today is " + td.isoformat()
+
+def hey(name):
+  print("Hey " + name + "; " + ~\HL{today}~())
+
+hey("you")
+\end{lstlisting}
+    \end{column}
+    \begin{column}[t]{0.4\linewidth}
+      \raggedleft
+      Unqualified name: since there is no local variable by that name,
+      it resolves to a module-level binding, i.e., to the
+      \texttt{today} function defined above.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Name resolution rules, IV}
+  \begin{columns}
+    \begin{column}[t]{0.6\linewidth}
+\begin{lstlisting}
+import datetime as ~\HL[Red!25]{dt}~
+
+def today():
+  td = ~\HL{dt}~.date.today()
+  return "today is " + td.isoformat()
+
+def hey(name):
+  print("Hey " + name + "; " + today())
+
+hey("you")
+\end{lstlisting}
+    \end{column}
+    \begin{column}[t]{0.4\linewidth}
+      \raggedleft
+      Unqualified name: resolves to the \texttt{dt} name created at global scope by the \texttt{import} statement.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Name resolution rules, V}
+  \begin{columns}
+    \begin{column}[t]{0.6\linewidth}
+\begin{lstlisting}
+import datetime as dt
+
+def today():
+  td = ~\HL{dt.date}~.today()
+  return "today is " + td.isoformat()
+
+def hey(name):
+  print("Hey " + name + "; " + today())
+
+hey("you")
+\end{lstlisting}
+    \end{column}
+    \begin{column}[t]{0.4\linewidth}
+      \raggedleft
+      Qualified name: instructs Python to search the
+      \texttt{date} attribute within the \texttt{dt} module.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Name resolution rules, VI}
+  \begin{columns}
+    \begin{column}[t]{0.6\linewidth}
+\begin{lstlisting}
+import datetime as dt
+
+def today():
+  td = dt.date.today()
+  return "today is " + ~\HL{td.isoformat}~()
+
+def hey(name):
+  print("Hey " + name + "; " + today())
+
+hey("you")
+\end{lstlisting}
+    \end{column}
+    \begin{column}[t]{0.4\linewidth}
+      \raggedleft
+      Qualified name: Python searches the \texttt{isoformat} attribute
+      within the \texttt{td} object instance.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Name resolution rules, VI}
+  \begin{columns}
+    \begin{column}[t]{0.6\linewidth}
+\begin{lstlisting}
+class Vector(object):
+  def __init__(self, ~\HL[Red!25]{x}~, ~\HL[Red!25]{y}~):
+    self.x = ~\HL{x}~
+    self.y = ~\HL{y}~
+  # ...
+\end{lstlisting}
+    \end{column}
+    \begin{column}[t]{0.4\linewidth}
+      \raggedleft
+      Unqualified name: resolves to a local variable in
+      scope of function \lstinline|__init__|.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Name resolution rules, VII}
+  \begin{columns}
+    \begin{column}[t]{0.6\linewidth}
+\begin{lstlisting}
+class Vector(object):
+  def __init__(self, x, y):
+    ~\HL{self.x}~ = x
+    ~\HL{self.y}~ = y
+  # ...
+\end{lstlisting}
+    \end{column}
+    \begin{column}[t]{0.4\linewidth}
+      \raggedleft
+      Qualified names: resolve to attributes in object \lstinline|self|.
+
+      \+ (Actually, \lstinline|self.x = ...| \emph{creates} the
+      attribute \lstinline|x| on \lstinline|self| if it does not exist
+      yet.)
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Object initialization}
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+\begin{lstlisting}
+class Vector(object):
+  """A 2D Vector."""
+  ~\HL{\textbf{def} \_\_init\_\_(\textbf{self}, x, y):}~
+    self.x = x
+    self.y = y
+  def add(self, other):
+    return Vector(self.x+other.x, self.y+other.y)
+  def mul(self, scalar):
+    return Vector(scalar*self.x, scalar*self.y)
+  def show(self):
+    return ("<%g,%g>" % (self.x, self.y))
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \raggedleft
+      The \lstinline|__init__| method has a special
+      meaning: it is called when an instance is created.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+  \frametitle{Constructors}
+
+  The \lstinline|__init__| method is the object constructor.
+  It should \emph{never} return any value.
+
+  \+
+  You never call \lstinline|__init__| directly, it is invoked by
+  Python when a new object is created from the class:
+\begin{lstlisting}
+# calls Vector.\_\_init\_\_
+v = Vector(0,1)
+\end{lstlisting}
+
+  \+
+  The arguments to \lstinline|__init__| are the arguments you
+  should supply when creating a class instance.
+
+  \+
+  (Again, minus the \texttt{self} part which is automatically
+  inserted by Python.)
+\end{frame}
+
+
+% \begin{frame}
+%   \frametitle{No overloading}
+
+%   \textbf{Python does not allow overloading of functions.}
+
+%   \+
+%   Any function.
+
+%   \+
+%   Hence, no overloading of constructors.
+
+%   \+
+%   So: \textbf{a class has one and only one constructor.}
+% \end{frame}
+
+
+\begin{frame}[fragile]
+  \begin{exercise}[9.A]
+    Add a new method \texttt{norm} the \texttt{Vector} class: if
+    \texttt{v} is an instance of class \texttt{Vector}, then calling
+    \texttt{v.norm()} returns the norm $\sqrt{v_x^2 + v_y^2}$ of
+    the associated vector.
+    (You will need the
+    \href{http://docs.python.org/2/library/math.html}{math} standard
+    module for computing square roots.)
+  \end{exercise}
+
+  \+
+  \begin{exercise}[9.B]
+    Add a new method \texttt{unit} to the \texttt{Vector} class: if
+    \texttt{v} is an instance of class \texttt{Vector}, then calling
+    \texttt{v.unit()} returns the vector \texttt{u} having the
+    same direction as \texttt{v} but norm $1$.
+  \end{exercise}
+\end{frame}
+
+
+\part{Appendix}
+
+\begin{frame}[fragile]
+  \frametitle{Everything is an object!}
+
+  The \texttt{dir} built-in function is used to list the attributes of an object.
+
+  \begin{python}
+>>> dir("hello!")
+  \end{python}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Everything is an object!}
+
+  The \texttt{dir} built-in function is used to list the attributes of an object.
+
+  \begin{python}
+>>> ~\HL{dir("hello!")}~
+['__add__', '__class__', '__contains__',
+ '__delattr__', '__doc__', '__eq__',
+ ~\ldots~
+'strip', 'swapcase', 'title',
+'translate', 'upper', 'zfill']
+\end{python}
+
+\+\ldots a string is an object!
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Everything is an object!}
+
+  \begin{python}
+>>> ~\HL{dir([1,2,3])}~
+['__add__', '__class__', '__contains__',
+~\ldots~
+'append', 'count', 'extend',
+'index', 'insert', 'pop',
+'remove', 'reverse', 'sort']
+\end{python}
+
+\+\ldots a \texttt{list} is an object!
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Everything is an object!}
+  Indeed, you can do:
+
+  \+
+  \begin{python}
+>>> "hello world!".split()
+['hello', 'world!']
+\end{python}
+
+\+
+\begin{python}
+>>> [1,1,2,3,5].count(1)
+2
+\end{python}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Everything is an object!}
+
+\begin{python}
+>>> ~\HL{dir(1)}~
+\end{python}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Everything is an object!}
+
+  \begin{python}
+>>> ~\HL{dir(1)}~
+['__abs__', '__add__', '__and__',
+~\ldots~
+'conjugate', 'denominator',
+'imag', 'numerator', 'real']
+\end{python}
+
+\+\ldots an \texttt{int} is an object!
+
+\+
+\begin{python}
+>>> (1).numerator
+2
+>>> (1).denominator
+1
+\end{python}
+\end{frame}
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

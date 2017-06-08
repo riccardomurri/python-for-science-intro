@@ -1,0 +1,154 @@
+\documentclass[english,serif,mathserif,xcolor=pdftex,dvipsnames,table]{beamer}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usetheme[informal]{s3it}
+\usepackage{s3it}
+
+\title[5. Exception handling]{%
+  A Short and Incomplete Introduction to Python
+}
+\subtitle{\bfseries Part 5: Exception handling}
+\author[R.~Murri]{%
+  Riccardo Murri \texttt{<riccardo.murri@uzh.ch>}
+  \\
+  S3IT: Services and Support for Science IT,
+  \\
+  University of Zurich
+}
+\date{June~8, 2017}
+
+
+%% simulate IPython prompt
+\newcounter{prompt}
+\newcommand\In{%
+  \global\def\promptnr{\arabic{prompt}}%
+  \stepcounter{prompt}%
+  {\color{blue}\bfseries In~[\promptnr]:}%
+}
+\newcommand\Out{{\color{red}\bfseries Out[\promptnr]:}}
+\newcommand\Ct{{\color{blue}   ...:}}
+
+\begin{document}
+
+% title frame
+\maketitle
+
+
+\part{Exception handling}
+
+\begin{frame}[fragile]
+  \frametitle{Exceptions}
+
+  ``Exceptions'' is the name given in Python to error conditions.
+
+  \+
+  You can write code that intercepts some error conditions and
+  reacts appropriately.
+
+  \+
+  \begin{seealso}
+    \url{http://docs.python.org/library/exceptions.html}
+  \end{seealso}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{What does an exception look like?}
+\begin{lstlisting}
+>>> stream.write('foo')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IOError: ~\ttfamily File not open for writing~
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{What does an exception look like?}
+\begin{lstlisting}
+>>> stream.write('foo')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+IOError: ~\HL{File not open for writing}~
+\end{lstlisting}
+
+  \+
+  This is the exception \emph{message}: it is supposed to be read
+  by the (human) user.
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{What does an exception look like?}
+\begin{lstlisting}
+>>> stream.write('foo')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+~\HL{IOError}~: File not open for writing
+\end{lstlisting}
+
+  \+ This is the exception \emph{class name}; it is used for catching
+  exceptions (syntax in the next slide).
+\end{frame}
+
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+try:
+  # code that might raise an exception
+except SomeException:
+  # handle some exception
+except AnotherException as ex:
+  # the actual Exception instance
+  # is available as variable `ex'
+finally:
+  # performed on exit in any case
+\end{lstlisting}
+
+  \+
+  The optional \lstinline|finally| clause is executed on exit from the
+  \lstinline|try| or \lstinline|except| block in \emph{any} case.
+
+  \begin{references}
+    \scriptsize
+    \url{http://docs.python.org/reference/compound_stmts.html#try}
+\end{references}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Raising exceptions in your code}
+  Use the \lstinline|raise| statement with an \texttt{Exception}
+  instance:
+\begin{lstlisting}
+if an_error_occurred:
+  raise RuntimeError("Spider sense is tingling.")
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}
+  \begin{exercise*}[5.A]
+    Try loading file \texttt{values2.txt} with the \lstinline`load_data()`
+    function from Exercise~4.A -- what exception does Python raise?
+
+    \+
+    Edit the \lstinline`load_data()` function into a \lstinline`load_data2()`
+    that \emph{ignores} any line that does not contain an integer number.
+
+    \+
+    Bonus points if you can write \lstinline`load_data2()` so that it has
+    exactly the same output of \lstinline`load_data()`, i.e. minimize the number
+    of rejected input lines.
+  \end{exercise*}
+\end{frame}
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

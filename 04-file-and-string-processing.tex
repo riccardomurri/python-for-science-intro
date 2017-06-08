@@ -1,0 +1,276 @@
+\documentclass[english,serif,mathserif,xcolor=pdftex,dvipsnames,table]{beamer}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usetheme[informal]{s3it}
+\usepackage{s3it}
+
+\title[4. Files and strings]{%
+  A Short and Incomplete Introduction to Python
+}
+\subtitle{\bfseries Part 4: File I/O and string processing}
+\author[R.~Murri]{%
+  Riccardo Murri \texttt{<riccardo.murri@uzh.ch>}
+  \\
+  S3IT: Services and Support for Science IT,
+  \\
+  University of Zurich
+}
+\date{June~8, 2017}
+
+
+%% simulate IPython prompt
+\newcounter{prompt}
+\newcommand\In{%
+  \global\def\promptnr{\arabic{prompt}}%
+  \stepcounter{prompt}%
+  {\color{blue}\bfseries In~[\promptnr]:}%
+}
+\newcommand\Out{{\color{red}\bfseries Out[\promptnr]:}}
+\newcommand\Ct{{\color{blue}   ...:}}
+
+\begin{document}
+
+% title frame
+\maketitle
+
+
+\part{File I/O}
+
+\begin{frame}[fragile]
+  \frametitle{File I/O}
+
+  Code for processing a text file usually looks like this:
+\begin{lstlisting}
+with open(filename, 'r') as stream:
+  # prepare for processing
+  for line in stream:
+    # process each line
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{File I/O}
+
+\begin{lstlisting}
+with ~\HL{open(filename, 'r')}~ as stream:
+  # prepare for processing
+  for line in stream:
+    # process each line
+\end{lstlisting}
+
+  \+ The \lstinline|open(path, mode)| function opens the file located at
+  \texttt{path} and returns a ``file object'' that can be used for reading
+  and/or writing.
+
+  \+ Mode is one of '\texttt{r}', '\texttt{w}' or '\texttt{a}' for reading,
+  writing (truncates on open), appending. You can add a `\texttt{+}' character
+  to enable read+write (other effects being the same).
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{File I/O}
+
+\begin{lstlisting}
+~\HL{with}~ open(filename, 'r') ~\HL{as}~ stream:
+  # prepare for processing
+  for line in stream:
+    # process each line
+\end{lstlisting}
+
+  \+
+  This is equivalent to \lstinline|stream = open(...)| but in addition
+  \emph{closes} the file when the code in the \texttt{with}-block is done.
+
+  \+
+  There are many more uses of the \texttt{with} statement besides automatically
+  closing files, check out \url{https://jeffknupp.com/blog/2016/03/07/python-with-context-managers/}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{File I/O}
+
+\begin{lstlisting}
+with open(filename, 'r') as stream:
+  # prepare for processing
+  ~\HL{for line in stream}~:
+    # process each line
+\end{lstlisting}
+
+  \+ A \texttt{for}-loop can be used to process all lines in a file, as if the
+  file were a list.
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{More on File I/O}
+
+  The \lstinline|.read()| method can be used to read the \emph{whole} contents
+  of a file in one go as a single string:
+\begin{lstlisting}
+>>> s = stream.read()
+\end{lstlisting}
+
+  \+
+  Method \lstinline|.readlines()| returns a list of all lines in the file:
+\begin{lstlisting}
+>>> L = stream.readlines()
+\end{lstlisting}
+
+  \begin{references}
+    \url{http://docs.python.org/library/stdtypes.html#file-objects}
+  \end{references}
+\end{frame}
+
+
+\begin{frame}[fragile,label=typeconv]
+  \frametitle{Type conversions}
+  \begin{description}
+  \item[str($x$)] Converts the argument $x$ to a string; for numbers,
+    the base 10 representation is used.
+  \item[int($x$)] Converts its argument $x$ (a number or a string) to an integer;
+    if $x$ is a a floating-point literal, decimal digits are truncated.
+  \item[float($x$)] Converts its argument $x$ (a number or a string) to a
+    floating-point number.
+  \end{description}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \begin{exercise*}[4.A]
+    Write a function \lstinline|load_data(filename)| that reads a file
+    containing one integer number per line, and return a list of the
+    integer values.
+
+    \+
+    Test it with the
+    \href{https://raw.github.com/gc3-uzh-ch/python-course/master/values.dat}{values.dat}
+    file:
+\begin{lstlisting}
+>>> load_data('values.dat')
+[299850, 299740, 299900, 300070, 299930]
+\end{lstlisting}
+  \end{exercise*}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Operations on strings, I}
+  \begin{describe}{%
+      \lstinline|s.capitalize()|,
+      \lstinline|s.lower()|,
+      \lstinline|s.upper()|}
+    Return a \emph{copy} of the string capitalized / turned all lowercase /
+    turned all uppercase.
+  \end{describe}
+
+  \begin{describe}{\lstinline|s.split(t)|}
+    Split \texttt{s} at every occurrence of \texttt{t} and return a list
+    of parts.  If \texttt{t} is omitted, split on whitespace.
+  \end{describe}
+
+  \begin{describe}{\lstinline|s.startswith(t)|,
+      \lstinline|s.endswith(t)|}
+    Return \texttt{True} if \texttt{t} is the initial/final substring
+    of \texttt{s}.
+  \end{describe}
+
+  \begin{references}
+    \url{http://docs.python.org/library/stdtypes.html#string-methods}
+  \end{references}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Operations on strings, II}
+  \begin{describe}{\lstinline|s.replace(old, new)|}
+    Return a \emph{copy} of string \texttt{s} with all occurrences of
+    substring \texttt{old} replaced by \texttt{new}.
+  \end{describe}
+
+  \begin{describe}{%
+      \lstinline|s.lstrip()|,
+      \lstinline|s.rstrip()|,
+      \lstinline|s.strip()|}
+    Return a \emph{copy} of the string with the leading (resp.\ trailing,
+    resp.\ leading \emph{and} trailing) whitespace removed.
+  \end{describe}
+
+  \begin{references}
+    \url{http://docs.python.org/library/stdtypes.html#string-methods}
+  \end{references}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Filesystem operations, I}
+  \small
+  These functions are available from the \texttt{os} module.
+
+  \begin{describe}{\lstinline|os.getcwd()|, \lstinline|os.chdir(path)|}
+    Return the path to the current working directory /
+    Change the current working directory to \texttt{path}.
+  \end{describe}
+
+  \begin{describe}{\lstinline|os.listdir(dir)|}
+    Return list of entries in directory \texttt{dir} (omitting
+    `\texttt{.}' and `\texttt{..}')
+  \end{describe}
+
+  % \begin{describe}{\lstinline|os.mkdir(path)|}
+  %   Create a directory; fails if the directory already exists.
+  %   Assumes that all parent directories exist already.
+  % \end{describe}
+
+  \begin{describe}{\lstinline|os.makedirs(path)|}
+    Create a directory; no-op if the directory already exists.
+    Creates all the intermediate-level directories needed to contain
+    the leaf.
+  \end{describe}
+
+  \begin{describe}{\lstinline|os.rename(old,new)|}
+    Rename a file or directory from \texttt{old} to \texttt{new}.
+  \end{describe}
+
+  \begin{references}
+    \url{http://docs.python.org/library/os.html}
+  \end{references}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Filesystem operations, II}
+  These functions are available from the \texttt{os.path} module.
+
+  \begin{describe}{\lstinline|os.path.exists(path)|, \lstinline|os.path.isdir(path)|, \lstinline|os.path.isfile(path)|}
+    Return \texttt{True} if \texttt{path} exists / is a directory / is
+    a regular file.
+  \end{describe}
+
+  \begin{describe}{\lstinline|os.path.basename(path)|,
+      \lstinline|os.path.dirname(path)|}
+    Return the base name (the part after the last `\texttt{/}'
+    character) or the directory name (the part before the last
+    \texttt{/} character).
+  \end{describe}
+
+  \begin{describe}{\lstinline|os.path.abspath(path)|}
+    Make \texttt{path} absolute (i.e., start with a \texttt{/}).
+  \end{describe}
+
+  \begin{references}
+    \url{http://docs.python.org/library/os.path.html}
+  \end{references}
+\end{frame}
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

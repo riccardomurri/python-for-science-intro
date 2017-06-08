@@ -1,0 +1,1450 @@
+\documentclass[english,serif,mathserif,xcolor=pdftex,dvipsnames,table]{beamer}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usetheme[informal]{s3it}
+\usepackage{s3it}
+
+\title[10. Workflows]{%
+  Introduction to workflows
+  using GC3Pie
+}
+\author[R.~Murri]{%
+  Riccardo Murri \texttt{<riccardo.murri@uzh.ch>}
+  \\
+  {\em S3IT: Services and Support for Science IT}
+  \\
+  University of Zurich
+}
+\date{June~8, 2017}
+
+
+\begin{document}
+
+% title frame
+\maketitle
+
+\begin{frame}
+  \frametitle{What is GC3Pie?}
+  GC3Pie is \ldots
+  \begin{enumerate}
+  \item An \emph{opinionated} Python framework for defining and running computational workflows;
+  \item \alert<2>{A \emph{rapid development toolkit} for running user applications on clusters and IaaS cloud resources;}
+  \item The worst name ever given to a middleware piece\ldots
+  \end{enumerate}
+
+  \+
+  As \emph{users}, \alert<2>{you're mostly interested in this part.}
+\end{frame}
+
+
+\part{Uses of GC3Pie}
+
+\begin{frame}[fragile]
+  \frametitle{Uses of GC3Pie: parameter sweep}
+
+  You have a simulation code that is dependent on a number of parameters.
+
+  \+
+  Run the code for all possible combinations of parameters.
+
+  \+
+  Then collect all the outputs and post-process to get a
+  statistical overview.
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Uses of GC3Pie: model calibration}
+
+  You have a simulation code that is dependent on a number of parameters.
+
+  \+
+  Run the code for all possible combinations of parameters, and
+  find the ones that ``best'' approximate a given experimental result.
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Uses of GC3Pie: parallel processing}
+
+  Run the same program over and over again,
+  feeding it different input files each time.
+
+  \+
+  Then collect all the outputs and post-process to get a
+  statistical overview.
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Uses of GC3Pie: parallel processing}
+  (At times, you chop a large input file into pieces and process each one separately instead.)
+
+  \+
+  \begin{quote}
+    ``For example, say we have a de novo assembly of 100,000
+    contigs. If we run 1 BLAST job against NR it could take as long as
+    50,000 minutes/35 days!! (30sec/query sequence), however if we
+    split this job into subsets of 5,000 sequences and ran 20 jobs in
+    "parallel" on a cluster, our total run-time is reduced to only 41
+    hours.''
+  \end{quote}
+  \begin{references}
+    \url{http://sfg.stanford.edu/BLAST.html}
+  \end{references}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Uses of GC3Pie: workflows}
+
+  \begin{center}
+    Orchestrate execution of several applications:
+    some steps may run in parallel, some might need to be sequenced.
+
+    \+
+    \only<1>{%
+      \begin{tabular}[c]{ccc}
+        \includegraphics[width=0.4\textwidth]{fig/butterfly.jpg}
+        &
+          \includegraphics[width=0.1\textwidth,totalheight=0.25\textheight]{fig/arrow.pdf}
+        &
+          \includegraphics[width=0.4\textwidth]{fig/warholized-butterfly.jpg}
+      \end{tabular}
+
+      \+
+      {\tiny\em (Butterfly image originally from
+        \href{https://pixabay.com/it/farfalla-rondine-farfalla-a-coda-1228639/}{pixabay.com})}
+    }%
+    \only<2>{%
+      \includegraphics[width=0.70\textwidth]{fig/warholize-wkf-with-results.pdf}
+    }%
+  \end{center}
+\end{frame}
+
+
+\part{How GC3Pie works}
+
+\begin{frame}
+  \frametitle{A typical high-throughput script structure}
+
+  \begin{enumerate}
+  \item Initialize computational resources
+  \item Prepare programs and inputs for submission
+  \item Submit tasks
+  \item Monitor task status (loop)
+  \item Retrieve results
+  \item Postprocess and display
+  \end{enumerate}
+\end{frame}
+
+
+\fullgraphicsframe{fig/gc3pie-running-1.pdf}
+
+\fullgraphicsframe{fig/gc3pie-running-3.pdf}
+
+%\fullgraphicsframe{fig/gc3pie-running-2.pdf}
+
+
+\begin{frame}
+  \frametitle{What GC3Pie handles for you}
+
+  \begin{enumerate}\small
+  \item Resource allocation (e.g. starting new instances on
+    ScienceCloud)
+  \item Selection of resources for each application in the session
+  \item Data transfer (e.g. copying input files in the new instances)
+  \item Remote execution of the application
+  \item Retrieval of results (e.g. copying output files from the
+    running instance)
+  \item De-allocation of resources
+  \end{enumerate}
+
+\end{frame}
+
+
+\part{Concepts and glossary}
+
+\begin{frame}
+  \frametitle{GC3Pie glossary: Application}
+  \begin{quote}
+    GC3Pie runs \alert<2-3>{user applications}
+    \\
+    on clusters and IaaS cloud resources
+  \end{quote}
+
+  \uncover<2-3>{
+    \+ \alert<2>{An \texttt{Application} is just a command to execute.}
+
+    \+
+    \only<2>{If you can run it in the terminal, \\ you can run it in GC3Pie.}
+    \only<3>{
+      \alert<3>{A single execution of an \texttt{Application} \\ is indeed called a \texttt{Run}.}
+
+      \+ (Other systems might call this a ``job''.)
+    }
+  }
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{GC3Pie glossary: Task}
+  \begin{quote}
+    GC3Pie \alert{runs} user applications
+    \\
+    on clusters and IaaS cloud resources
+  \end{quote}
+
+  \+ More generally, GC3Pie runs \texttt{Task}s.
+
+  \+ \texttt{Task}s are a superset of applications,
+  \\ in that they include workflows.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{GC3Pie glossary: Resources}
+  \begin{quote}
+    GC3Pie runs user applications
+    \\
+    on clusters and IaaS cloud \alert{resources}
+  \end{quote}
+
+  \+ \alert{\texttt{Resource}s are the computing infrastructures \\ where GC3Pie executes applications.}
+
+  \+ Resources may include: your laptop, the ``Ubelix'' cluster, SWITCHengines, Amazon EC2.
+\end{frame}
+
+
+\part{Workflow scaffolding}
+
+\begin{frame}[fragile]
+  \frametitle{Let's start coding!}
+  \begin{columns}
+    \begin{column}{0.7\linewidth}
+\begin{python}
+from gc3libs.cmdline \
+  import SessionBasedScript
+
+if __name__ == '__main__':
+  import ex2a
+  ex2a.AScript().run()
+
+class AScript(SessionBasedScript):
+  """
+  Minimal workflow scaffolding.
+  """
+  def __init__(self):
+    super(AScript, self).__init__(
+        version='1.0')
+  def new_tasks(self, extra):
+    apps_to_run = [ ]
+    return apps_to_run
+\end{python}
+    \end{column}
+    \begin{column}{0.3\linewidth}
+      \href{https://raw.githubusercontent.com/riccardomurri/python-for-science-intro/master/solutions/ex2a.py}{Download} this code into a file named \texttt{ex2a.py}
+
+      \+
+      Open it in your favorite text editor.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \begin{exercise*}[10.A]
+
+    \+
+    \href{https://raw.githubusercontent.com/riccardomurri/python-for-science-intro/master/solutions/ex2a.py}{Download this code} into a file named \texttt{ex2a.py}
+
+    \begin{enumerate}
+    \item Run the following command:
+\begin{sh}
+$ python ex2a.py --help
+\end{sh}%$
+        Where does the program description in the help text come from?
+        Is there anything weird in other parts of the help text?
+
+    \item Run the following command:
+\begin{sh}
+$ python ex2a.py
+\end{sh}%$
+        What happens?
+      \end{enumerate}
+  \end{exercise*}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \begin{columns}[t]
+    \begin{column}{0.7\linewidth}
+\begin{python}
+from gc3libs.cmdline \
+  import SessionBasedScript
+
+~\HL{if \_\_name\_\_ == '\_\_main\_\_':}~
+  ~\HL{import ex2a}~
+  ~\HL{ex2a.AScript().run()}~
+
+class AScript(SessionBasedScript):
+  """
+  Minimal workflow scaffolding.
+  """
+  def __init__(self):
+    super(AScript, self).__init__(
+        version='1.0')
+  def new_tasks(self, extra):
+    apps_to_run = [ ]
+    return apps_to_run
+\end{python}
+    \end{column}
+    \begin{column}{0.4\linewidth}
+      \begin{flushright}
+        These lines are needed in every session-based script.
+
+        \+
+        See \href{https://github.com/uzh/gc3pie/issues/95}{issue 95} for details.
+      \end{flushright}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \begin{columns}[t]
+    \begin{column}{0.7\linewidth}
+\begin{python}
+from gc3libs.cmdline \
+  import SessionBasedScript
+
+if __name__ == '__main__':
+  import ~\HL{ex2a}~
+  ~\HL{ex2a}~.AScript().run()
+
+class AScript(SessionBasedScript):
+  """
+  Minimal workflow scaffolding.
+  """
+  def __init__(self):
+    super(AScript, self).__init__(
+        version='1.0')
+  def new_tasks(self, extra):
+    apps_to_run = [ ]
+    return apps_to_run
+\end{python}
+    \end{column}
+    \begin{column}{0.4\linewidth}
+      \begin{flushright}
+        For this to work, it is \textbf{needed} that this is the
+        actual file name.
+      \end{flushright}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.7\linewidth}
+\begin{python}
+from gc3libs.cmdline \
+  import SessionBasedScript
+
+if __name__ == '__main__':
+  import ex2a
+  ex2a.AScript().run()
+
+class AScript(SessionBasedScript):
+  """
+  ~\HL{Minimal workflow scaffolding.}~
+  """
+  def __init__(self):
+    super(AScript, self).__init__(
+        version='1.0')
+  def new_tasks(self, extra):
+    apps_to_run = [ ]
+    return apps_to_run
+\end{python}
+    \end{column}
+    \begin{column}{0.4\linewidth}
+      \begin{flushright}
+        This is the \\ program's help text!
+      \end{flushright}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.7\linewidth}
+\begin{python}
+from gc3libs.cmdline \
+  import SessionBasedScript
+
+if __name__ == '__main__':
+  import ex2a
+  ex2a.AScript().run()
+
+class AScript(SessionBasedScript):
+  """
+  Minimal workflow scaffolding.
+  """
+  def __init__(self):
+    super(AScript, self).__init__(
+      ~\HL{version='1.0'}~)
+  def new_tasks(self, extra):
+    apps_to_run = [ ]
+    return apps_to_run
+\end{python}
+    \end{column}
+    \begin{column}{0.4\linewidth}
+      \begin{flushright}
+        A version number \\ is \textbf{mandatory}.
+      \end{flushright}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.7\linewidth}
+\begin{python}
+from gc3libs.cmdline \
+  import SessionBasedScript
+
+if __name__ == '__main__':
+  import ex2a
+  ex2a.AScript().run()
+
+class AScript(SessionBasedScript):
+  """
+  Minimal workflow scaffolding.
+  """
+  def __init__(self):
+    super(AScript, self).__init__(
+        version='1.0')
+  def new_tasks(self, extra):
+    ~\HL{apps\_to\_run = [ ]}~
+    ~\HL{return apps\_to\_run}~
+\end{python}
+    \end{column}
+    \begin{column}{0.4\linewidth}
+      \begin{flushright}
+        \textbf{This is the core of the script.}
+
+        \+
+        Return a list of \texttt{Application} objects, that GC3Pie will execute.
+      \end{flushright}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\section{Applications}
+\part{The \texttt{Application} object}
+
+\begin{frame}
+  \frametitle{Specifying commands to run, I}
+
+  You need to ``describe'' an application to GC3Pie, in order for
+  GC3Pie to use it.
+
+  \+
+  This ``description'' is a blueprint from which many actual
+  command instances can be created.
+
+  \+
+  (A few such ``descriptions'' are already part of the core library.)
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{GC3Pie application model}
+
+  In GC3Pie, an application ``description'' is an object of the
+  \texttt{gc3libs.Application} class (or subclasses thereof).
+
+  \+
+  At a minimum: provide application-specific command-line invocation.
+
+  \+
+  Advanced users can customize pre- and post-processing, react on
+  state transitions, set computational requirements based on input
+  files, influence scheduling.  (This is standard OOP: subclass and
+  override a method.)
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Detour: asset pricing, I}
+  \small The script \texttt{simAsset.R} simulates asset pricing over a certain
+  amount of time. Different pricing paths are generated using a
+  \href{https://en.wikipedia.org/wiki/Wiener_process}{1D Brownian motion},
+  all starting from the same initial price.
+  \begin{center}
+    \includegraphics[width=0.75\linewidth]{fig/simAsset.pdf}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Detour: asset pricing, II}
+  \small You can run the \texttt{simAsset.R} script by giving it one single
+  input file in CSV format.  For example:
+\begin{semiverbatim}
+  \$ Rscript simAsset.R simAsset.dat
+\end{semiverbatim}
+
+  \+ Each run of \texttt{simAsset.R} script produces two output files \emph{per
+    each input row}:
+  \begin{description}
+  \item[result$K$.csv] table of generated data: each column is a simulation path, each row is a time step;
+  \item[result$K$.pdf] plot of the above.
+  \end{description}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Detour: asset pricing, III}
+
+  Each line of the input file for \texttt{simAsset.R} contains the following
+  fields, separated by a comma (`\texttt{,}'):
+  \begin{description}
+  \item[$S_0$] stock price today (e.g., 50)
+  \item[$\mu$] expected return (e.g., 0.04)
+  \item[$\sigma$] volatility (e.g., 0.1)
+  \item[$\delta$] size of time steps (e.g., 0.273)
+  \item[$e$] days to expiry (e.g., 1000)
+  \item[$N$] number of simulation paths to generate
+  \end{description}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Running the asset pricing example, I}
+
+  Here is how you would tell GC3Pie \\ to run that command-line.
+
+\begin{python}
+from gc3libs import Application
+
+class PricingApp1(Application):
+  """Simulate asset pricing."""
+  def __init__(self, infile):
+    inp = basename(infile)
+    Application.__init__(
+      self,
+      arguments=[
+        'Rscript', 'simAsset.R', inp],
+      inputs=['simAsset.R', inp],
+      outputs=['result1.csv', 'result1.pdf'],
+      output_dir='pricing1.d',
+      stdout='stdout.txt')
+\end{python}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Always inherit from Application}
+
+  Your application class must inherit from class \texttt{gc3libs.Application}
+  \+
+\begin{python}
+~\HL{from gc3libs import Application}~
+
+class PricingApp1~\HL{(Application)}~:
+  """Simulate asset pricing."""
+  def __init__(self, infile):
+    inp = basename(infile)
+    Application.__init__(
+      self,
+      arguments=[
+        'Rscript', 'simAsset.R', inp],
+      inputs=['simAsset.R', inp],
+      outputs=['result1.csv', 'result1.pdf'],
+      output_dir='pricing1.d',
+      stdout='stdout.txt')
+\end{python}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{The \texttt{arguments} parameter, I}
+
+  The \texttt{arguments=} parameter is the actual command-line to be invoked.
+
+  \+
+\begin{python}
+class PricingApp1(Application):
+  """Simulate asset pricing."""
+  def __init__(self, infile):
+    inp = basename(infile)
+    Application.__init__(
+      self,
+      ~\HL{arguments=[}~
+        ~\HL{"Rscript", "simAsset.R", inp],}~
+      inputs=['simAsset.R', inp],
+      outputs=['result1.csv', 'result1.pdf'],
+      output_dir='pricing1.d',
+      stdout='stdout.txt')
+\end{python}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{arguments} parameter, II}
+
+The first item in the \texttt{arguments} list is the name or path to the command to run.
+
+  \+
+\begin{python}
+class PricingApp1(Application):
+  """Simulate asset pricing."""
+  def __init__(self, infile):
+    inp = basename(infile)
+    Application.__init__(
+      self,
+      arguments=[
+        ~\HL{'Rscript'}~, 'simAsset.R', inp],
+      inputs=['simAsset.R', inp],
+      outputs=['result1.csv', 'result1.pdf'],
+      output_dir='pricing1.d',
+      stdout='stdout.txt')
+\end{python}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{arguments} parameter, III}
+
+The rest of the list are arguments to the program, as you would type
+them at the shell prompt.
+
+  \+
+\begin{python}
+class PricingApp1(Application):
+  """Simulate asset pricing."""
+  def __init__(self, infile):
+    inp = basename(infile)
+    Application.__init__(
+      self,
+      arguments=[
+        'Rscript', ~\HL{'simAsset.R', inp}~],
+      inputs=['simAsset.R', inp],
+      outputs=['result1.csv', 'result1.pdf'],
+      output_dir='pricing1.d',
+      stdout='stdout.txt')
+\end{python}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{inputs} parameter, I}
+
+The \texttt{inputs} parameter holds a list of files that you want to
+\emph{copy} to the location where the command is executed. (Remember:
+this might be a remote computer!)
+
+  \+
+\begin{python}
+class PricingApp1(Application):
+  """Simulate asset pricing."""
+  def __init__(self, infile):
+    inp = basename(infile)
+    Application.__init__(
+      self,
+      arguments=[
+        'Rscript', 'simAsset.R', inp],
+      ~\HL{inputs=['simAsset.R', inp]}~,
+      outputs=['result1.csv', 'result1.pdf'],
+      output_dir='pricing1.d',
+      stdout='stdout.txt')
+\end{python}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{The \texttt{inputs} parameter, II}
+
+  Input files retain their name during the copy, \\ but not the entire path.
+
+  \+
+  For example:
+  \begin{python}
+    inputs = [
+      '/home/rmurri/db01/values.dat',
+      '/home/rmurri/stats.csv',
+    ]
+  \end{python}
+  will make files \emph{values.dat} and \emph{stats.csv} available in
+  the command execution directory.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{The \texttt{inputs} parameter, III}
+
+  You need to pass the full path name into the
+  \texttt{inputs} list, but use only the ``base name'' in the command
+  invocation.
+
+\begin{python}
+class PricingApp1(Application):
+  """Simulate asset pricing."""
+  def __init__(self, infile):
+    ~\HL{inp = basename(infile)}~
+    Application.__init__(
+      self,
+      arguments=[
+        'Rscript', 'simAsset.R', ~\HL{inp}~],
+      inputs=['simAsset.R', ~\HL{inp}~],
+      outputs=['result1.csv', 'result1.pdf'],
+      output_dir='pricing1.d',
+      stdout='stdout.txt')
+\end{python}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{outputs} parameter, I}
+
+The \texttt{outputs} argument list files that should be copied from
+the command execution directory back to your computer.
+
+  \+
+\begin{python}
+class PricingApp1(Application):
+  """Simulate asset pricing."""
+  def __init__(self, infile):
+    inp = basename(infile)
+    Application.__init__(
+      self,
+      arguments=[
+        'Rscript', 'simAsset.R', inp],
+      inputs=['simAsset.R', inp],
+      ~\HL{outputs=['result1.csv', 'result1.pdf']}~,
+      output_dir='pricing1.d',
+      stdout='stdout.txt')
+\end{python}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{The \texttt{outputs} parameter, II}
+
+  Output file names are \emph{relative to the execution directory}.
+  For example:
+  \begin{python}
+    outputs = ['result.dat', 'program.log']
+  \end{python}
+
+  \+
+  (Contrast with input files, which must be specified by
+  \emph{absolute path}, e.g., \texttt{/home/rmurri/values.dat})
+
+  \+
+  Any file with the given name that is found in the execution
+  directory will be copied back. (\emph{Where?} See next slides!)
+
+  \+
+  If an output file is \emph{not} found, this is \emph{not} an
+  error. In other words, \textbf{output files are optional}.
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{output\_dir} parameter, I}
+
+The \lstinline|output_dir| parameter specifies where output filess
+will be downloaded.
+
+\+
+\begin{python}
+class PricingApp1(Application):
+  """Simulate asset pricing."""
+  def __init__(self, infile):
+    inp = basename(infile)
+    Application.__init__(
+      self,
+      arguments=[
+        'Rscript', 'simAsset.R', inp],
+      inputs=['simAsset.R', inp],
+      outputs=['result1.csv', 'result1.pdf'],
+      ~\HL{output\_dir='pricing1.d'}~,
+      stdout='stdout.txt')
+\end{python}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{The \emph{output\_dir} parameter, II}
+
+  By default, GC3Pie does not overwrite an existing output directory:
+  it will move the existing one to a backup name.
+
+  \+
+  So, if \texttt{pricing1.d} already exists, GC3Pie will:
+  \begin{enumerate}
+  \item rename it to \lstinline|pricing1.d.~1~|
+  \item create a new directory \texttt{pricing1.d}
+  \item download output files into the new directory
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{stdout} parameter}
+
+This specifies that the command's \emph{standard output} should be
+saved into a file named \texttt{stdout.txt} and retrieved along with
+the other output files.
+
+  \+
+\begin{python}
+class PricingApp1(Application):
+  """Simulate asset pricing."""
+  def __init__(self, infile):
+    inp = basename(infile)
+    Application.__init__(
+      self,
+      arguments=[
+        'Rscript', 'simAsset.R', inp],
+      inputs=['simAsset.R', inp],
+      outputs=['result1.csv', 'result1.pdf'],
+      output_dir='pricing1.d',
+      ~\HL{stdout="stdout.txt"}~)
+\end{python}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{(The \texttt{stderr} parameter)}
+
+There's a corresponding \texttt{stderr} option for the command's
+\emph{standard error} stream.
+
+\begin{python}
+class PricingApp1(Application):
+  """Simulate asset pricing."""
+  def __init__(self, infile):
+    inp = basename(infile)
+    Application.__init__(
+      self,
+      arguments=[
+        'Rscript', 'simAsset.R', inp],
+      inputs=['simAsset.R', inp],
+      outputs=['result1.csv', 'result1.pdf'],
+      output_dir='pricing1.d',
+      stdout='stdout.txt')
+      ~\HL{stderr="stderr.txt"}~)
+\end{python}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Mixing \texttt{stdout} and \texttt{stderr} capture}
+
+  You can specify \textbf{either one} of the \texttt{stdout} and
+  \texttt{stderr} parameters, \textbf{or both}.
+
+  \+
+  If you give both, and they have the same value, then
+  \texttt{stdout} and \texttt{stderr} will be intermixed just as they
+  are in normal screen output.
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Let's run!}
+  In order for a session-based script to execute something, its
+  \texttt{new\_tasks()} method must return a list of
+  \texttt{Application} objects to run.
+
+\+
+\begin{python}
+class AScript(SessionBasedScript):
+  # ...
+  def new_tasks(self, extra):
+    # `self.param.args' is the list
+    # of command-line arguments
+    input_file = self.params.args[0]
+    app = PricingApp1(input_file)
+    return [app]
+\end{python}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \small
+
+  \begin{exercise*}[10.B]
+
+    \+
+    Edit the \texttt{ex2a.py} file: insert the code to define the
+    \href{https://raw.githubusercontent.com/riccardomurri/python-for-science-intro/master/downloads/pricingapp1.py}{\texttt{PricingApp1}}
+    application, and modify the \texttt{new\_tasks()} method to return
+    one instance of it (as in the previous slide).
+
+    \+
+    Can you process the \href{https://raw.githubusercontent.com/riccardomurri/python-for-science-intro/master/fig/simAsset1.dat}{\texttt{simAsset1.dat}} file using this GC3Pie script?
+
+    \+ \footnotesize
+    {\em (You can download the code for \texttt{PricingApp1} and the ``\texttt{simAsset1.dat}'' file from
+    \href{https://raw.githubusercontent.com/riccardomurri/python-for-science-intro/master/}{this
+      URL}.)}
+  \end{exercise*}
+
+  \+
+  \begin{exercise*}[10.C]
+    What happens if you omit the \texttt{result1.pdf} file from the
+    \texttt{outputs=[...]} line?  And if you omit the \texttt{result1.csv} one?
+  \end{exercise*}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \small
+
+  \begin{exercise*}[10.D]
+
+    Edit the script from Exercise 2.B above and add the ability to process
+    multiple input lines: for each row of the file given on the command line, an
+    instance of \texttt{ProcessingApp1} should be run. Test this with the
+    \href{https://raw.githubusercontent.com/riccardomurri/python-for-science-intro/master/fig/simAsset2.dat}{\texttt{simAsset2.dat}}
+  \end{exercise*}
+
+  \+
+  \begin{exercise*}[10.E]
+    Edit the script from Exercise 2.D above and add the ability to
+    process multiple input files: for each file name given on the command
+    line, an instance of \texttt{ProcessingApp1} should be run.
+  \end{exercise*}
+\end{frame}
+
+
+\section{Resource definition}
+\part{Resource definition}
+
+\begin{frame}[fragile]
+  \frametitle{The \texttt{gservers} command}
+
+  The \texttt{gservers} command is used to see \alert<2>{configured} and
+  available resources.
+
+\+
+\begin{stdout}
+$ gservers
++---------------------+--------------------------+-----------+
+|                     | localhost                |           |
++---------------------+--------------------------+-----------+
+|            frontend | ( Frontend host name )   | localhost |
+|                type | ( Access mode )          | shellcmd  |
+|             updated | ( Accessible? )          | True      |
+|              queued | ( Total queued jobs )    | 0         |
+|         user_queued | ( Own queued jobs )      | 0         |
+|            user_run | ( Own running jobs )     | 6         |
+|   max_cores_per_job | ( Max cores per job )    | 4         |
+| max_memory_per_core | ( Max memory per core )  | 8GiB      |
+|        max_walltime | ( Max walltime per job ) | 8hour     |
++---------------------+--------------------------+-----------+
+\end{stdout}%$
+
+\uncover<2>{%
+  \small \alert<2>{Resources are defined in file \texttt{\$HOME/.gc3/gc3pie.conf}}
+}
+\end{frame}
+
+
+\begin{frame}[fragile,label=resources]
+  \frametitle{Example execution resources: local host}
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+      Allow GC3Pie to run tasks on the local computer.
+
+      \+ This is the default installed by GC3Pie
+      into \lstinline|$HOME/.gc3/gc3pie.conf| %$
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \begin{stdout}
+[resource/localhost]
+enabled = yes
+type = shellcmd
+frontend = localhost
+transport = local
+max_cores_per_job = 2
+max_memory_per_core = 2GiB
+max_walltime = 8 hours
+max_cores = 2
+architecture = x86_64
+auth = none
+override = no
+\end{stdout}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Example execution resources: SLURM}
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+      Allow submission of jobs to the ``Hydra'' cluster.
+    \end{column}
+    \begin{column}{0.5\textwidth}
+\begin{stdout}
+[resource/hydra]
+enabled = no
+type = slurm
+frontend = login.s3it.uzh.ch
+transport = ssh
+auth = ssh_user_rmurri
+max_walltime = 1 day
+max_cores = 96
+max_cores_per_job = 64
+max_memory_per_core = 1 TiB
+architecture = x86_64
+prologue_content =
+  module load cluster/largemem
+
+[auth/ssh_user_rmurri]
+type=ssh
+username=rmurri
+\end{stdout}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Example execution resources: OpenStack}
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+\begin{stdout}
+[resource/sciencecloud]
+enabled=no
+type=openstack+shellcmd
+auth=openstack
+
+vm_pool_max_size = 32
+security_group_name=default
+security_group_rules=
+  tcp:22:22:0.0.0.0/0,
+  icmp:-1:-1:0.0.0.0/0
+network_ids=
+  c86b320c-9542-4032-a951-c8a068894cc2
+
+# definition of a single execution VM
+instance_type=1cpu-4ram-hpc
+image_id=2b227d15-8f6a-42b0-b744-ede52ebe59f7
+
+max_cores_per_job = 8
+max_memory_per_core = 4 GiB
+max_walltime = 90 days
+max_cores = 32
+architecture = x86_64
+
+# how to connect
+vm_auth=ssh_user_ubuntu
+keypair_name=rmurri
+public_key=~/.ssh/id_dsa.pub
+\end{stdout}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{stdout}
+[auth/ssh_user_ubuntu]
+# default user on Ubuntu VM images
+type=ssh
+username=ubuntu
+
+
+[auth/openstack]
+# only need to set the `type` here;
+# any other value will be taken from
+# the `OS\_*` environment variables
+type = openstack
+      \end{stdout}
+
+      \+\+\+
+      Allow running tasks on the ``ScienceCloud'' VM infrastructure.
+
+      % \+ \footnotesize
+      % Cloud-based submission happens in two steps:
+      % \emph{(1)} create a VM, \emph{(2)} SSH to it and run jobs.  Each
+      % step requires different connection and authentication.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Select execution resource}
+
+  When multiple resources are available, you can select where
+  applications will be run with option \texttt{--resource}/\texttt{-r}:
+\begin{semiverbatim}
+    \$ ./warholize.py -r localhost
+\end{semiverbatim}
+
+  \+ The resource name must exists in the configuration file (i.e.,
+  check \texttt{gservers}' output).
+
+  \+ Stopping a script and re-starting it with a different resource
+  will likely result in an error: old tasks can no longer be found.
+\end{frame}
+
+
+\part{Post-processing}
+
+\begin{frame}[fragile]
+  \frametitle{Post-processing features, I}
+
+  When the remote computation is done, the \texttt{terminated} method
+  of the application instance is called.
+
+  \+
+  The path to the output directory is available as
+  \lstinline|self.output_dir|.
+
+  \+
+  If \texttt{stdout} and \texttt{stderr}
+  have been captured, the \textbf{relative} paths to the capture files
+  are available as \lstinline|self.stdout| and
+  \lstinline|self.stderr|.
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Post-processing features, II}
+
+  For example, the following code logs a warning message if the
+  standard error output is non-empty:
+\begin{python}
+class MyApp(Application):
+  # ...
+  def terminated(self):
+    stderr_file = self.output_dir+"/"+self.stderr
+    stderr_size = os.stat(stderr_file).st_size
+    if stderr_size > 0:
+      gc3libs.log.warn(
+        "Application %s reported errors!", self)
+\end{python}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Useful in post-processing}\small
+
+  These attributes are available in the \texttt{terminated()} method:
+
+  \+
+  \begin{describe}{\lstinline|self.inputs|}
+    Python dictionary, mapping local (absolute) paths to remote paths (relative
+    to execution directory)
+  \end{describe}
+
+  \+
+  \begin{describe}{\lstinline|self.outputs|}
+    Python dictionary, mapping remote paths (relative to execution directory) to
+    \emph{URLs} where they have been copied. In particular,
+    \lstinline|self.outputs.keys()| is the list of output file names.
+  \end{describe}
+
+  \+
+  \begin{describe}{\lstinline|self.output_dir|}
+    Path to the local directory where output files have been downloaded.
+  \end{describe}
+\end{frame}
+
+
+\begin{frame}
+  \begin{exercise*}[10.F]
+    Modify class \texttt{PricingApp1} so that, when the task is done, the
+    \texttt{result1.csv} file is read and the average final price is computed
+    and printed to the screen together with the initial price.
+
+    \+ You might need to check for the existence of the output file, and that it
+    contains the correct output: not all tasks are successful!
+  \end{exercise*}
+
+  \begin{exercise*}[10.G]
+    Bonus points if you can, instead of printing the initial and final prices,
+    save them to a file \texttt{pricing\_totals.csv}.
+  \end{exercise*}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Global post-processing, I}
+In order to do ``global'' post-processing (i.e., across \texttt{Application}
+objects), you need to hook into the GC3Pie script's main loop:
+
+\+
+\begin{describe}{\lstinline|after_main_loop(self)|}
+  to execute some code \emph{after} the main loop, i.e., before the script
+  quits. A list of all Application objects is available in the
+  \lstinline|self.session.tasks.values()| list.
+\end{describe}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Global post-processing, II}
+  Example: compute statistical distribution of termination statuses:
+
+  \begin{python}
+def after_main_loop(self):
+  # check that all tasks are terminated
+  can_postprocess = True
+  for task in self.session.tasks.values():
+    if task.execution.state != 'TERMINATED':
+      can_postprocess = False
+      break
+  if can_postprocess:
+    # do stuff... (see next slide)
+  \end{python}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Global post-processing, III}
+  Example: compute statistical distribution of termination statuses (cont'd):
+
+  \begin{python}
+def after_main_loop(self):
+  # ... (see prev slide)
+  if can_postprocess:
+    status_counts = defaultdict(int)
+    for app in self.session.tasks.values():
+      termstatus = app.execution.returncode
+      status_counts[termstatus] += 1
+  \end{python}
+
+  \+\small Variable \lstinline|self.session.tasks| holds a mapping
+  \lstinline|JobID|~$\Rightarrow$~\lstinline|Application|; thus
+  \lstinline|self.session.tasks.values()| is a list of all the
+  \texttt{Application} instances returned by \lstinline|new_tasks|
+\end{frame}
+
+
+\begin{frame}
+  \begin{exercise*}[10.H]
+    Modify the script from the last exercise to produce a scatter plot of the
+    initial and average final prices as a final post-processing step when
+    everything else is done.
+  \end{exercise*}
+\end{frame}
+
+
+\part{Application requirements}
+
+\begin{frame}
+  Applications need to allocate computing resources.
+  For instance: request 4 processors for 8 hours.
+
+  \+
+  GC3Pie allows requesting:
+  \begin{itemize}
+  \item the number of processors that a job can use,
+  \item the architecture (32-bit or 64-bit) of these processors,
+  \item the guaranteed duration of a job,
+  \item the amount of memory that a job can use (per processor).
+  \end{itemize}
+
+  \+
+  More fine-grained matching is possible, but outside the scope of
+  this introductory training.
+\end{frame}
+
+
+\begin{frame}[fragile]
+  Resources are requested using additional constructor parameters for
+  \texttt{Application} objects.
+
+  \+
+  The allowed parameters are:
+  \lstinline|requested_cores|,
+  \lstinline|requested_architecture|,
+  \lstinline|requested_walltime|,
+  \lstinline|requested_memory|.
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Running parallel jobs}
+
+  You request allocation of a certain number of processors using the
+  \lstinline|requested_cores| parameter: set it to the number of CPU
+  cores that you want.
+
+  \+
+  For example, the following runs the command \texttt{mpixexec
+    simulator} on 4 processors:
+  \begin{python}
+  class ZodsApplication(Application):
+    # ...
+    Application.__init__(self,
+      arguments=['mpiexec', '-n', '4', 'simulator'],
+      # ...
+      ~\HL{requested\_cores=4}~)
+  \end{python}
+
+  \+
+  {\small Note that GC3Pie only guarantees the availability of a certain
+    number of processors; it is your application's responsibility to use
+    them, e.g., by starting a command using MPI or any other parallel
+    processing mechanism.}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Requesting processor architecture}
+
+  If you send the compiled executable along with your application, you
+  need to select only resources that can run that binary file.
+
+  \+
+  The \lstinline|requested_architecture| parameter provides the
+  choice between \lstinline|gc3libs.Run.Arch.X86_64| (for 64-bit
+  Intel/AMD computers) and \lstinline|gc3libs.Run.Arch.X86_32| (for
+  32-bit ones):
+  \begin{python}
+  from gc3libs import Run
+  class CodemlApplication(Application):
+    # ...
+    Application.__init__(self,
+      arguments=['./codeml.bin'],
+      inputs = ['/usr/local/bin/codeml', ...]
+      # ...
+      ~\HL{requested\_architecture=Run.Arch.X86\_64}~)
+  \end{python}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Requesting running time}
+
+  In order to ensure that your job is allotted enough time to run on
+  the remote computing system, use the \lstinline|requested_walltime|
+  parameter.
+
+  \+
+  \begin{python}
+  ~\HL{\textbf{from} gc3libs.quantity}~ \
+    ~\HL{\textbf{import} minutes, hours, days}~
+
+  class CodemlApplication(Application):
+    # ...
+    Application.__init__(self,
+      # ...
+      ~\HL{requested\_walltime=8*hours}~)
+  \end{python}
+
+  \+
+  You \textbf{must} use a \texttt{gc3libs.quantity} multiple for the
+  \lstinline|requested_walltime| parameter; any other value will be
+  rejected with an error.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Units of time}
+  The Python module \texttt{gc3libs.quantity} provides units for
+  expressing time requirements in days, hours, minutes, seconds.
+
+  \+
+  Just multiply the unit by the amount you need:
+  \begin{python}
+    >>> an_hour = 1*hours
+  \end{python}
+  Or sum the amounts:
+  \begin{python}
+    >>> two_days = 1*days + 24*hours
+  \end{python}
+
+  \+
+  GC3Pie will automatically perform the conversions:
+  \begin{python}
+    >>> two_hours = 2*hours
+    >>> another_two_hours = 7200*seconds
+    >>> two_hours == another_two_hours
+    True
+  \end{python}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Requesting memory}
+  In order to secure a certain amount of memory for a job, use the
+  \lstinline|requested_memory| parameter.
+
+  \+
+  Example:
+\begin{python}
+  ~\HL{\textbf{from} gc3libs.quantity \textbf{import} GB, MB, kB}~
+  class CodemlApplication(Application):
+    # ...
+    Application.__init__(self,
+      # ...
+      ~\HL{requested\_memory=8*GB}~)
+\end{python}
+
+  \+
+  Note that \lstinline|requested_memory| expresses the total
+  memory used by the job!
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Units of memory}
+  The Python module \texttt{gc3libs.quantity} provides units for
+  expressing memory requirements in kilo-, Mega- and Giga-bytes.
+
+  \+
+  Just multiply the unit by the amount you need:
+\begin{python}
+  >>> a_gigabyte = 1*GB
+  >>> two_megabytes = 2*MB
+\end{python}
+
+  \+
+  GC3Pie will automatically perform the conversions:
+  \begin{python}
+    >>> two_gigabytes = 2*GB
+    >>> another_two_gbs = 2000*MB
+    >>> two_gigabytes == another_two_gbs
+    True
+  \end{python}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{All together now}
+
+\begin{python}
+from gc3libs.quantity import GB, MB, kB
+from gc3libs.quantity import days, hours, minutes
+
+class CodemlApplication(Application):
+  # ...
+  Application.__init__(self,
+    # ...
+    requested_cores=1,
+    requested_memory=2*GB,
+    requested_walltime=8*hours)
+\end{python}
+
+  \+ When several resource requirements are specified, GC3Pie tries to
+  satisfy \emph{all} of them.  \textbf{If this is not possible, task
+  submission fails and the task stays in state \emph{NEW}.}
+
+\end{frame}
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

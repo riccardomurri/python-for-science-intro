@@ -1,0 +1,409 @@
+\documentclass[english,serif,mathserif,xcolor=pdftex,dvipsnames,table]{beamer}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usetheme[informal]{s3it}
+\usepackage{s3it}
+
+\title[2. Functions]{%
+  A Short and Incomplete Introduction to Python
+}
+\subtitle{\bfseries Part 2: Functions}
+\author[R.~Murri]{%
+  Riccardo Murri \texttt{<riccardo.murri@uzh.ch>}
+  \\
+  S3IT: Services and Support for Science IT,
+  \\
+  University of Zurich
+}
+\date{June~8, 2017}
+
+
+%% simulate IPython prompt
+\newcounter{prompt}
+\newcommand\I{%
+  \global\def\promptnr{\arabic{prompt}}%
+  \stepcounter{prompt}%
+  {\color{blue}\bfseries In~[\promptnr]:}%
+}
+\renewcommand\O{{\color{red}\bfseries Out[\promptnr]:}}
+\newcommand\C{{\color{blue}   ...:}}
+
+\begin{document}
+
+% title frame
+\maketitle
+
+
+\part{Functions}
+
+\begin{frame}[fragile,label=func1]
+  \frametitle{Functions, I}
+  Functions are called by postfixing the function name with a
+  parenthesized argument list.
+
+  \+
+\begin{lstlisting}
+>>> int("42")
+42
+>>> int(4.2)
+4
+>>> float(42)
+42.0
+>>> str(42)
+'42'
+>>> str()
+''
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Functions, II}
+  Some functions can take a variable number of arguments. For instance:
+
+  \+
+  \begin{description}
+    \item[sum($x_0$, \ldots, $x_n$)] Return $x_0 + \cdots + x_n$.
+    \item[max($x_0$, \ldots, $x_n$)] Return the maximum of $\{ x_0, \ldots, x_n \}$
+    \item[min($x_0$, \ldots, $x_n$)] Return the minimum of $\{ x_0, \ldots, x_n \}$
+  \end{description}
+
+  \+
+  Examples:
+\begin{semiverbatim}
+\I min(1,2,3)
+\O 1
+\I max(1,2)
+\O 2
+\end{semiverbatim}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{The most important function of all}
+  \begin{description}
+  \item[help(\texttt{fn})] Display help on the function named \texttt{fn}
+  \end{description}
+
+  \+
+  \begin{exercise}[2.A]
+    What happens if you type these at the prompt?
+    \begin{itemize}
+    \item \texttt{help(abs)}
+    \item \texttt{help(help)}
+    \end{itemize}
+  \end{exercise}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{How to define new functions}
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+\begin{lstlisting}
+~\HL{\textbf{def} greet(name):}~
+  """
+  A friendly function.
+  """
+  print ("Hello, " + name + "!")
+
+# the customary greeting
+greet("world")
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \raggedleft
+      The \textbf{def} statement starts a function definition.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+\begin{lstlisting}
+def greet(name):
+  """
+  A friendly function.
+  """
+  ~\HL{print ("Hello, " + name + "!")}~
+
+# the customary greeting
+greet("world")
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \raggedleft
+      \textbf{Indentation is significant in Python}: it is used to delimit
+      blocks of code, like `\texttt{\{}' and `\texttt{\}}' in Java and C.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+\begin{lstlisting}
+def greet(name):
+  """
+  A friendly function.
+  """
+  print ("Hello, " + name + "!")
+
+~\HL{\it\tt\#\ the customary greeting}~
+greet("world")
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \raggedleft
+      (This is a comment. It is ignored by Python, just like blank lines.)
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+\begin{lstlisting}
+def greet(name):
+  """
+  A friendly function.
+  """
+  print ("Hello, " + name + "!")
+
+# the customary greeting
+~\HL{greet("world")}~
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \raggedleft
+      This calls the function just defined.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}[t]
+    \begin{column}{0.5\textwidth}
+\begin{lstlisting}
+def greet(name):
+  ~\HL{"""}~
+  ~\HL{A friendly function.}~
+  ~\HL{"""}~
+  print ("Hello, " + name + "!")
+
+# the customary greeting
+greet("world")
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \raggedleft
+      What is this? The answer in the next exercise!
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \begin{exercise*}[2.B]
+    Type and run the code on the previous page at the interactive
+    prompt. (Pay attention to indentation!)
+
+    \+
+    What's the result of evaluating the function \texttt{greet("world")}?
+
+    \+
+    What does \texttt{help(greet)} output?
+  \end{exercise*}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Default values}
+
+  Function arguments can have default values.
+\begin{lstlisting}
+>>> def hello(name='world'):
+...   print ("Hello, " + name)
+...
+>>> hello()
+'Hello, world'
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Named arguments}
+Python allows calling a function with named arguments:
+\begin{lstlisting}
+hello(name="Alice")
+\end{lstlisting}
+
+\+
+When passing arguments by name, they can be passed in any order:
+\begin{lstlisting}
+>>> from fractions import Fraction
+>>> Fraction(numerator=1, denominator=2)
+Fraction(1, 2)
+>>> Fraction(denominator=2, numerator=1)
+Fraction(1, 2)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{The `return` statement}
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{lstlisting}
+def double(x):
+  ~\HL{return x+x}~
+
+double(3) == 6
+      \end{lstlisting}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \raggedleft The result of a function evaluation is set by the
+      \textit{return} statement.
+
+     \+
+      If no \texttt{return} is present, the function returns the
+      special value \texttt{None}.
+
+         \end{column}
+  \end{columns}
+\+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{lstlisting}
+def double(x):
+  return x+x
+  # the following line
+  # is never exec'd
+  ~\HL{print('Hello')}~
+      \end{lstlisting}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \raggedleft After executing \texttt{return} the control flow
+      leaves the function.
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+
+\part{Basic control flow}
+\begin{frame}[fragile]
+  \frametitle{Conditionals}
+  Conditional execution uses the \texttt{if} statement:
+\begin{lstlisting}
+if ~\it expr~:
+  # indented block
+elif ~\it other-expr~:
+  # indented block
+else:
+  # executed if none of the above matched
+\end{lstlisting}
+
+  \+The \texttt{elif} can be repeated, with different conditions, or
+  left out entirely.
+
+  \+
+  Also the \texttt{else} clause is optional.
+
+  \+
+  \begin{question}
+    Where's the `end if'?
+
+    \pause{There's no `end if': indentation delimits blocks!}
+  \end{question}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{\texttt{while}-Loops}
+  Conditional looping uses the \texttt{while} statement:
+\begin{lstlisting}
+while ~\it expr~:
+  # indented block
+\end{lstlisting}
+% else:
+%   # executed at natural end of the loop
+
+  \+
+  To break out of a \texttt{while} loop, use the \texttt{break}
+  statement.
+
+  \+
+  Use the \texttt{continue} statement anywhere in the indented
+  block to jump back to the \texttt{while} statement.
+
+  % \+
+  % If a loop is exited via a \texttt{break} statement, the
+  % \texttt{else} clause is \emph{not} executed.
+
+  % \+
+  % The \texttt{else} clause is optional.
+\end{frame}
+
+
+\begin{frame}
+  \begin{exercise*}[2.C]
+    Modify the \texttt{greet()} function to print ``Welcome back!'' if the
+    argument \texttt{name} is the string \texttt{'Python'}.
+  \end{exercise*}
+\end{frame}
+
+
+\part{Modules}
+
+\begin{frame}[fragile]
+  \frametitle{Modules, I}
+  The \texttt{import} statement reads a \texttt{.py} file, executes
+  it, and makes its contents available to the current program.
+\begin{lstlisting}
+>>> import hello
+Hello, world!
+\end{lstlisting}
+
+  \+
+  \textbf{Modules are only read once}, no matter how many times an
+  \texttt{import} statement is issued.
+\begin{lstlisting}
+>>> import hello
+Hello, world!
+>>> import hello
+>>> import hello
+\end{lstlisting}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Modules, II}
+  Modules are \emph{namespaces:} functions and variables defined in
+  a module must be prefixed with the module name when used in other
+  modules:
+\begin{lstlisting}
+>>> hello.greet("Python")
+Hello, Python!
+\end{lstlisting}
+
+  \+
+  To import definitions into the current namespace, use the
+  `\texttt{from $x$ import $y$}' form:
+\begin{lstlisting}
+>>> from hello import greet
+>>> greet("Python")
+Hello, Python!
+\end{lstlisting}
+\end{frame}
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
