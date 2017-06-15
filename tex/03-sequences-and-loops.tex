@@ -51,7 +51,7 @@
 
 
 \begin{frame}[fragile]
-  \frametitle{Lists - \textit{(mutable, heterogeneous)}}
+  \frametitle{Lists}
   Lists are by far the most common and used sequence type in Python.
 
   \+
@@ -403,7 +403,7 @@ and to loop over a sequence in \textit{inverted} order you can use the
 \begin{python}
 # *** Exercise 3.B ***
 def is_odd(x):
-  return (x % 2 == 0)
+  return (x % 2 == 1)
 
 def odd(L):
   return filter(is_odd, L)
@@ -459,7 +459,7 @@ import matplotlib.pyplot as plt
 import seaborn as sea
   \end{python}
 
-  \+ The same code (minus the \texttt{\%matplotlib inline}) ``magic'') can be
+  \+ The same code (minus the \texttt{\%matplotlib inline} ``magic'') can be
   used in any Python script.  By default, graphics will appear in a separate
   pop-up window.
 \end{frame}
@@ -569,7 +569,7 @@ fig.savefig('fig/lineplot2.pdf')
 
 
 \begin{frame}
-  \begin{exercise}[3.D]
+  \begin{exercise*}[3.D]
     Write a function \texttt{plotfn(xs, f)} that takes two arguments:
     \begin{itemize}
     \item a sequence of numbers \texttt{xs}, and
@@ -584,7 +584,7 @@ fig.savefig('fig/lineplot2.pdf')
     \+ \textbf{More bonus points:} Change the \texttt{plotfn} function so to
     take a \emph{list} of mathematical functions \texttt{fs} and plot all of them.
     \end{itemize}
-  \end{exercise}
+  \end{exercise*}
 \end{frame}
 
 
