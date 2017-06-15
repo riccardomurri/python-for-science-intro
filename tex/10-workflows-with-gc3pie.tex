@@ -229,8 +229,8 @@ from gc3libs.cmdline \
   import SessionBasedScript
 
 if __name__ == '__main__':
-  import ex2a
-  ex2a.AScript().run()
+  import ex10a
+  ex10a.AScript().run()
 
 class AScript(SessionBasedScript):
   """
@@ -245,7 +245,7 @@ class AScript(SessionBasedScript):
 \end{python}
     \end{column}
     \begin{column}{0.3\linewidth}
-      \href{https://raw.githubusercontent.com/riccardomurri/python-for-science-intro/master/solutions/ex2a.py}{Download} this code into a file named \texttt{ex2a.py}
+      \href{https://raw.githubusercontent.com/riccardomurri/python-for-science-intro/master/download/ex10a.py}{Download} this code into a file named \texttt{ex10a.py}
 
       \+
       Open it in your favorite text editor.
@@ -258,19 +258,19 @@ class AScript(SessionBasedScript):
   \begin{exercise*}[10.A]
 
     \+
-    \href{https://raw.githubusercontent.com/riccardomurri/python-for-science-intro/master/solutions/ex2a.py}{Download this code} into a file named \texttt{ex2a.py}
+    \href{https://raw.githubusercontent.com/riccardomurri/python-for-science-intro/master/download/ex10a.py}{Download this code} into a file named \texttt{ex10a.py}
 
     \begin{enumerate}
     \item Run the following command:
 \begin{sh}
-$ python ex2a.py --help
+$ python ex10a.py --help
 \end{sh}%$
         Where does the program description in the help text come from?
         Is there anything weird in other parts of the help text?
 
     \item Run the following command:
 \begin{sh}
-$ python ex2a.py
+$ python ex10a.py
 \end{sh}%$
         What happens?
       \end{enumerate}
@@ -286,8 +286,8 @@ from gc3libs.cmdline \
   import SessionBasedScript
 
 ~\HL{if \_\_name\_\_ == '\_\_main\_\_':}~
-  ~\HL{import ex2a}~
-  ~\HL{ex2a.AScript().run()}~
+  ~\HL{import ex10a}~
+  ~\HL{ex10a.AScript().run()}~
 
 class AScript(SessionBasedScript):
   """
@@ -321,8 +321,8 @@ from gc3libs.cmdline \
   import SessionBasedScript
 
 if __name__ == '__main__':
-  import ~\HL{ex2a}~
-  ~\HL{ex2a}~.AScript().run()
+  import ~\HL{ex10a}~
+  ~\HL{ex10a}~.AScript().run()
 
 class AScript(SessionBasedScript):
   """
@@ -354,8 +354,8 @@ from gc3libs.cmdline \
   import SessionBasedScript
 
 if __name__ == '__main__':
-  import ex2a
-  ex2a.AScript().run()
+  import ex10a
+  ex10a.AScript().run()
 
 class AScript(SessionBasedScript):
   """
@@ -386,8 +386,8 @@ from gc3libs.cmdline \
   import SessionBasedScript
 
 if __name__ == '__main__':
-  import ex2a
-  ex2a.AScript().run()
+  import ex10a
+  ex10a.AScript().run()
 
 class AScript(SessionBasedScript):
   """
@@ -418,8 +418,8 @@ from gc3libs.cmdline \
   import SessionBasedScript
 
 if __name__ == '__main__':
-  import ex2a
-  ex2a.AScript().run()
+  import ex10a
+  ex10a.AScript().run()
 
 class AScript(SessionBasedScript):
   """
@@ -482,10 +482,11 @@ class AScript(SessionBasedScript):
 
 \begin{frame}
   \frametitle{Detour: asset pricing, I}
-  \small The script \texttt{simAsset.R} simulates asset pricing over a certain
-  amount of time. Different pricing paths are generated using a
-  \href{https://en.wikipedia.org/wiki/Wiener_process}{1D Brownian motion},
-  all starting from the same initial price.
+  \small The script
+  \href{https://raw.githubusercontent.com/riccardomurri/python-for-science-intro/master/download/simAsset.R}{\texttt{simAsset.R}}
+  simulates asset pricing over a certain amount of time. Different pricing paths
+  are generated using a \href{https://en.wikipedia.org/wiki/Wiener_process}{1D
+    Brownian motion}, all starting from the same initial price.
   \begin{center}
     \includegraphics[width=0.75\linewidth]{fig/simAsset.pdf}
   \end{center}
@@ -506,6 +507,11 @@ class AScript(SessionBasedScript):
   \item[result$K$.csv] table of generated data: each column is a simulation path, each row is a time step;
   \item[result$K$.pdf] plot of the above.
   \end{description}
+
+  \+ \footnotesize
+  {\em (You can download a sample ``\texttt{simAsset1.dat}'' input file from
+    \href{https://raw.githubusercontent.com/riccardomurri/python-for-science-intro/master/download/}{this
+      URL}.)}
 \end{frame}
 
 
@@ -522,6 +528,11 @@ class AScript(SessionBasedScript):
   \item[$e$] days to expiry (e.g., 1000)
   \item[$N$] number of simulation paths to generate
   \end{description}
+
+  \+ \footnotesize
+  {\em (You can download a sample ``\texttt{simAsset1.dat}'' input file from
+    \href{https://raw.githubusercontent.com/riccardomurri/python-for-science-intro/master/download/}{this
+      URL}.)}
 \end{frame}
 
 
@@ -541,7 +552,7 @@ class PricingApp1(Application):
       self,
       arguments=[
         'Rscript', 'simAsset.R', inp],
-      inputs=['simAsset.R', inp],
+      inputs=['simAsset.R', infile],
       outputs=['result1.csv', 'result1.pdf'],
       output_dir='pricing1.d',
       stdout='stdout.txt')
@@ -565,7 +576,7 @@ class PricingApp1~\HL{(Application)}~:
       self,
       arguments=[
         'Rscript', 'simAsset.R', inp],
-      inputs=['simAsset.R', inp],
+      inputs=['simAsset.R', infile],
       outputs=['result1.csv', 'result1.pdf'],
       output_dir='pricing1.d',
       stdout='stdout.txt')
@@ -588,7 +599,7 @@ class PricingApp1(Application):
       self,
       ~\HL{arguments=[}~
         ~\HL{"Rscript", "simAsset.R", inp],}~
-      inputs=['simAsset.R', inp],
+      inputs=['simAsset.R', infile],
       outputs=['result1.csv', 'result1.pdf'],
       output_dir='pricing1.d',
       stdout='stdout.txt')
@@ -610,7 +621,7 @@ class PricingApp1(Application):
       self,
       arguments=[
         ~\HL{'Rscript'}~, 'simAsset.R', inp],
-      inputs=['simAsset.R', inp],
+      inputs=['simAsset.R', infile],
       outputs=['result1.csv', 'result1.pdf'],
       output_dir='pricing1.d',
       stdout='stdout.txt')
@@ -633,7 +644,7 @@ class PricingApp1(Application):
       self,
       arguments=[
         'Rscript', ~\HL{'simAsset.R', inp}~],
-      inputs=['simAsset.R', inp],
+      inputs=['simAsset.R', infile],
       outputs=['result1.csv', 'result1.pdf'],
       output_dir='pricing1.d',
       stdout='stdout.txt')
@@ -701,7 +712,7 @@ class PricingApp1(Application):
       self,
       arguments=[
         'Rscript', 'simAsset.R', ~\HL{inp}~],
-      inputs=['simAsset.R', ~\HL{inp}~],
+      inputs=['simAsset.R', ~\HL{infile}~],
       outputs=['result1.csv', 'result1.pdf'],
       output_dir='pricing1.d',
       stdout='stdout.txt')
@@ -725,7 +736,7 @@ class PricingApp1(Application):
       self,
       arguments=[
         'Rscript', 'simAsset.R', inp],
-      inputs=['simAsset.R', inp],
+      inputs=['simAsset.R', infile],
       ~\HL{outputs=['result1.csv', 'result1.pdf']}~,
       output_dir='pricing1.d',
       stdout='stdout.txt')
@@ -772,7 +783,7 @@ class PricingApp1(Application):
       self,
       arguments=[
         'Rscript', 'simAsset.R', inp],
-      inputs=['simAsset.R', inp],
+      inputs=['simAsset.R', infile],
       outputs=['result1.csv', 'result1.pdf'],
       ~\HL{output\_dir='pricing1.d'}~,
       stdout='stdout.txt')
@@ -813,7 +824,7 @@ class PricingApp1(Application):
       self,
       arguments=[
         'Rscript', 'simAsset.R', inp],
-      inputs=['simAsset.R', inp],
+      inputs=['simAsset.R', infile],
       outputs=['result1.csv', 'result1.pdf'],
       output_dir='pricing1.d',
       ~\HL{stdout="stdout.txt"}~)
@@ -836,7 +847,7 @@ class PricingApp1(Application):
       self,
       arguments=[
         'Rscript', 'simAsset.R', inp],
-      inputs=['simAsset.R', inp],
+      inputs=['simAsset.R', infile],
       outputs=['result1.csv', 'result1.pdf'],
       output_dir='pricing1.d',
       stdout='stdout.txt')
@@ -884,7 +895,7 @@ class AScript(SessionBasedScript):
   \begin{exercise*}[10.B]
 
     \+
-    Edit the \texttt{ex2a.py} file: insert the code to define the
+    Edit the \texttt{ex10a.py} file: insert the code to define the
     \href{https://raw.githubusercontent.com/riccardomurri/python-for-science-intro/master/downloads/pricingapp1.py}{\texttt{PricingApp1}}
     application, and modify the \texttt{new\_tasks()} method to return
     one instance of it (as in the previous slide).
@@ -894,7 +905,7 @@ class AScript(SessionBasedScript):
 
     \+ \footnotesize
     {\em (You can download the code for \texttt{PricingApp1} and the ``\texttt{simAsset1.dat}'' file from
-    \href{https://raw.githubusercontent.com/riccardomurri/python-for-science-intro/master/}{this
+   \href{https://raw.githubusercontent.com/riccardomurri/python-for-science-intro/master/download/}{this
       URL}.)}
   \end{exercise*}
 
@@ -911,7 +922,7 @@ class AScript(SessionBasedScript):
 
   \begin{exercise*}[10.D]
 
-    Edit the script from Exercise 2.B above and add the ability to process
+    Edit the script from Exercise 10.B above and add the ability to process
     multiple input lines: for each row of the file given on the command line, an
     instance of \texttt{ProcessingApp1} should be run. Test this with the
     \href{https://raw.githubusercontent.com/riccardomurri/python-for-science-intro/master/fig/simAsset2.dat}{\texttt{simAsset2.dat}}
@@ -919,7 +930,7 @@ class AScript(SessionBasedScript):
 
   \+
   \begin{exercise*}[10.E]
-    Edit the script from Exercise 2.D above and add the ability to
+    Edit the script from Exercise 10.B above and add the ability to
     process multiple input files: for each file name given on the command
     line, an instance of \texttt{ProcessingApp1} should be run.
   \end{exercise*}
@@ -1086,7 +1097,7 @@ type = openstack
   When multiple resources are available, you can select where
   applications will be run with option \texttt{--resource}/\texttt{-r}:
 \begin{semiverbatim}
-    \$ ./warholize.py -r localhost
+    \$ ./script.py -r localhost
 \end{semiverbatim}
 
   \+ The resource name must exists in the configuration file (i.e.,
