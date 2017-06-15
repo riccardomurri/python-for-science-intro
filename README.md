@@ -2,18 +2,19 @@ A short introduction to Python, NumPy, and Pandas
 =================================================
 
 This repository collects slides, exercises and other supporting material used in
-the Python language introduction delivered at [BrainHack Zurich][1] on March 2, 2017.
-
-[1]: https://dynage.github.io/brainhack-zh/
+Python language introduction courses that I deliver on-demand.
 
 The material in this course covers:
 
-* the basics of Python programming, up to the point of being able to do simple loops, file I/O, and basic data structure manipulation (part 01);
-* basics of NumPy and plotting with Matplotlib/Seaborn (part 02);
-* table manipulation with Pandas (part 03).
+* the basics of Python programming, up to the point of being able to do simple loops, 
+  file I/O, and basic data structure manipulation (parts 01 through 05);
+* basics of NumPy and plotting with Matplotlib/Seaborn (part 07);
+* table manipulation with Pandas (part 08).
+* a short overview of how to run pleasantly parallel workflows with [GC3Pie][7]
+  (parts 09 and 10).
 
-The three parts are meant to be independent; those who already know Python
-programming may want to skip part 1 altogether.
+The last parts are meant to be independent; those who already know Python
+programming may want to skip parts 01 through 05 altogether.
 
 Basic computer programming knowledge (e.g., what is a variable, what is a loop)
 is assumed and not covered in the material: students should already be familiar
@@ -25,16 +26,31 @@ computer programs.
 [4]: http://www.matplotlib.org/
 [5]: http://seaborn.pydata.org/
 [6]: http://pandas.pydata.org/
+[7]: http://gc3pie.readthedocs.io/
 
 
 How to use the material
 -----------------------
 
-The IPython notebooks in files `*EMPTY.ipynb` contain exercises to be solved
-during the course. A copy of the notebooks with complete solutions, is available
-in the `solutions/` subdirectory. A PDF slide deck introduces and completements
-the first exercise notebook; for parts 2 and 3, commentary and links are
-directly embedded in the notebook and there is no separate slide deck.
+The IPython notebooks in files `*.EX.ipynb` (in folder `exercises/`) contain
+exercises to be solved during the course. A copy of the notebooks with complete
+solutions, is available in the `solutions/` subdirectory. A PDF slide deck
+introduces and completements the first exercise notebook; for parts 7 and 8,
+commentary and links are directly embedded in the notebook and there is no
+separate slide deck.
+
+
+Where has this been used?
+-------------------------
+
+So far, the material here has been used in two occasions:
+
+* at [BrainHack Zurich][x1] on March 2, 2017.
+* for the ScITS training [Introduction to Workflows with Python][x2] 
+  at the University of Bern on June 8, 2017.
+
+[x1]: https://dynage.github.io/brainhack-zh/
+[x2]: http://www.scits.unibe.ch/training/internal_training/introduction_to_workflows_with_python
 
 
 How to contribute
