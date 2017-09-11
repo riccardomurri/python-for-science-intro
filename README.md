@@ -43,15 +43,17 @@ separate slide deck.
 Where has this been used?
 -------------------------
 
-So far, the material here has been used in two occasions:
+So far, the material here has been used in 3 occasions:
 
 * at [BrainHack Zurich][x1] on March 2, 2017.
 * for the ScITS training [Introduction to Workflows with Python][x2] 
   at the University of Bern on June 8, 2017.
+* for the ScITS training [Introduction to Python for science][x3] 
+  at the University of Bern on September 14-15, 2017.
 
 [x1]: https://dynage.github.io/brainhack-zh/
 [x2]: http://www.scits.unibe.ch/training/internal_training/introduction_to_workflows_with_python
-
+[x3]: https://ilias.unibe.ch/goto_ilias3_unibe_crs_1148660.html
 
 How to contribute
 -----------------
