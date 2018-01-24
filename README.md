@@ -6,7 +6,7 @@ Python language introduction courses that I deliver on-demand.
 
 The material in this course covers:
 
-* the basics of Python programming, up to the point of being able to do simple loops, 
+* the basics of Python programming, up to the point of being able to do simple loops,
   file I/O, and basic data structure manipulation (parts 01 through 05);
 * basics of NumPy and plotting with Matplotlib/Seaborn (part 07);
 * table manipulation with Pandas (part 08).
@@ -43,15 +43,17 @@ separate slide deck.
 Where has this been used?
 -------------------------
 
-So far, the material here has been used in two occasions:
+So far, the material here has been used in a few occasions:
 
 * at [BrainHack Zurich][x1] on March 2, 2017.
-* for the ScITS training [Introduction to Workflows with Python][x2] 
+* for the ScITS training [Introduction to Workflows with Python][x2]
   at the University of Bern on June 8, 2017.
+* for the ScITS training [Introduction to Python for science][x3]
+  at the University of Bern in September 2017 and January 2018.
 
 [x1]: https://dynage.github.io/brainhack-zh/
 [x2]: http://www.scits.unibe.ch/training/internal_training/introduction_to_workflows_with_python
-
+[x3]: https://ilias.unibe.ch/goto_ilias3_unibe_crs_1148660.html
 
 How to contribute
 -----------------
