@@ -425,6 +425,31 @@ def deviation(L, m):
 \end{frame}
 
 
+\begin{frame}
+  \frametitle{Other containers}
+
+  The following builtin containers are always available:
+  \begin{description}
+  \item[dict] \textit{mutable} key/value mapping.
+  \item[set] \textit{mutable}, unordered set of \textit{unique} elements.
+  \item[frozenset] \textit{immutable}, unordered set of
+    \textit{unique} elements.
+  \end{description}
+
+  \pause
+  Other specialized containers are available in the
+  \texttt{collections} module:
+
+  \begin{description}
+  \item[dequeue] a generalization of stacks and queues
+  \item[namedtuple] similar to a tuple, but allows you to access the
+    elements \textit{by name}
+  \item[OrderedDict] dictionary that remembers the order that the
+    items were inserted.
+  \end{description}
+\end{frame}
+
+
 \part{Plotting basics}
 
 
@@ -611,31 +636,6 @@ fig.savefig('fig/lineplot2.pdf')
 \begin{semiverbatim}
 sea.barplot(x, y, ax=ax)
 \end{semiverbatim}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{Other containers}
-
-  The following builtin containers are always available:
-  \begin{description}
-  \item[dict] \textit{mutable} key/value mapping.
-  \item[set] \textit{mutable}, unordered set of \textit{unique} elements.
-  \item[frozenset] \textit{immutable}, unordered set of
-    \textit{unique} elements.
-  \end{description}
-
-  \pause
-  Other specialized containers are available in the
-  \texttt{collections} module:
-
-  \begin{description}
-  \item[dequeue] a generalization of stacks and queues
-  \item[namedtuple] similar to a tuple, but allows you to access the
-    elements \textit{by name}
-  \item[OrderedDict] dictionary that remembers the order that the
-    items were inserted.
-  \end{description}
 \end{frame}
 
 
