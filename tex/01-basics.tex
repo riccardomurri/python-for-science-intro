@@ -11,13 +11,14 @@
 }
 \subtitle{\bfseries Part 1: Basic Python syntax}
 \author[R.~Murri]{%
-  Riccardo Murri \texttt{<riccardo.murri@uzh.ch>}
+  \textbf{Riccardo Murri} \texttt{<riccardo.murri@uzh.ch>}, \\
+  Sergio Maffioletti \texttt{<sergio.maffioletti@uzh.ch>}
   \\
   S3IT: Services and Support for Science IT,
   \\
   University of Zurich
 }
-\date{June~8, 2017}
+\date{January 25--26, 2018}
 
 
 \begin{document}
@@ -250,11 +251,9 @@ True
 \end{frame}
 
 
-\part{Appendix}
-
 \begin{frame}[fragile]
   \frametitle{Basic types}
-  Basic object types in Python:
+  Basic object types in Python 3:
   \begin{description}
   \item[bool] The class of the two boolean constants \texttt{True}, \texttt{False}.
   \item[int] Integer numbers: \texttt{1}, \texttt{-2}, \ldots
@@ -263,7 +262,8 @@ True
   %   automatically from \texttt{int} to \texttt{long} when needed.
   \item[float] Double precision floating-point numbers, e.g.:
     \texttt{3.1415}, \texttt{-1e-3}.
-  \item[str] Text (strings of byte-size characters).
+  \item[bytes] String of byte-size characters.
+  \item[str] Text (string of UNICODE characters).
   %\item[unicode] Strings of UNICODE characters.
   \item[list] Mutable list of Python objects
   \item[dict] Key/value mapping
@@ -276,6 +276,8 @@ True
 \end{semiverbatim}
 \end{frame}
 
+
+\part{Appendix}
 
 \section{Caveats}
 

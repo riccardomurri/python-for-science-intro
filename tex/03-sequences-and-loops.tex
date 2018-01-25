@@ -11,13 +11,14 @@
 }
 \subtitle{\bfseries Part 3: Sequences and \texttt{for}-loops}
 \author[R.~Murri]{%
-  Riccardo Murri \texttt{<riccardo.murri@uzh.ch>}
+  \textbf{Riccardo Murri} \texttt{<riccardo.murri@uzh.ch>}, \\
+  Sergio Maffioletti \texttt{<sergio.maffioletti@uzh.ch>}
   \\
   S3IT: Services and Support for Science IT,
   \\
   University of Zurich
 }
-\date{June~8, 2017}
+\date{January 25--26, 2018}
 
 
 \begin{document}
@@ -39,11 +40,11 @@
   \end{description}
 
   \+
-  Additional sequence types are provided by external modules:
+  Additional sequence types \\ are provided by external modules:
   \begin{description}
-  \item[array] \emph{mutable}, homogeneous (like C/Fortran arrays,
+  \item[array] \emph{mutable}, homogeneous \\ (like C/Fortran arrays,
     from~\href{http://numpy.scipy.org}{NumPy})
-  \item[DataFrame] \emph{mutable}, heterogeneous (like R,
+  \item[DataFrame] \emph{mutable}, heterogeneous \\ (like R,
     from~\href{http://pandas.pydata.org/}{Pandas})
   \end{description}
 
@@ -195,7 +196,7 @@ The new slice does not need to have the same length:
   \end{describe}
 
   \begin{describe}{L.remove(x)}
-    Remove first occurence of item having value \texttt{x} from list \texttt{L}.
+    Remove first occurence of item having value \texttt{x} from list~\texttt{L}.
   \end{describe}
 
   \begin{describe}{L.pop(n)}
@@ -601,7 +602,7 @@ fig.savefig('fig/lineplot2.pdf')
 \begin{frame}[fragile]
   \frametitle{Bar plots}
 
-  Use the \texttt{sea.barplot(x, y)} function.
+  Use Seaborn's \texttt{sea.barplot(x, y)} function.
 
   \+
   Everything else works \emph{almost} as in line plots; when you need to plot
