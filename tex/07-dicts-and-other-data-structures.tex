@@ -99,48 +99,6 @@
 \end{frame}
 
 
-%%% Mutable vs immutable
-
-\begin{frame}[fragile]
-  \frametitle{Mutable vs Immutable}
-  Some objects (e.g., \texttt{tuple}, \texttt{int}, \texttt{str})
-  are \emph{immutable} and cannot be modified.
-\begin{lstlisting}
->>> S = 'UZH'
->>> S[2] = 'G'
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-TypeError: 'str' object does not support item assignment
-\end{lstlisting}
-
-
-  \+
-  \texttt{list}, \texttt{dict}, \texttt{set} and user-defined objects
-  are \emph{mutable} and can be modified in-place.
-\end{frame}
-
-\begin{frame}[fragile]
-  \frametitle{Dictionary, sets and mutable objects}
-
-  Not all objects can be used as dictionary \emph{keys} or items in a
-  set:
-  \begin{itemize}
-    \item
-      \textit{Immutable} objects \textbf{can be} used as \texttt{dict} keys or set items.
-    \item
-      \textit{Mutable} objects  \textbf{cannot be} used as \texttt{dict} keys or set items.
-    \end{itemize}
-
-    \+
-    {\footnotesize
-      (Explanation for the technically savvy: a dictionary is
-      essentially a \href{http://en.wikipedia.org/wiki/Hash_table}{Hash
-        Table}, therefore keys of a dictionary must be \textit{hashable}
-      objects.  If objects were allowed to mutate, their hash value
-      would change too and we would lose the mapping.)}
-\end{frame}
-
-
 \begin{frame}[fragile]
   \frametitle{The `{\ttfamily\bfseries in}' operator (1)}
 
@@ -202,17 +160,28 @@ TypeError: 'str' object does not support item assignment
 \end{frame}
 
 
-\part{Appendix}
-
-
 \subsection{Making copies}
 
 \begin{frame}[fragile]
-  \frametitle{How to copy an object?}
+  \frametitle{How to copy an object? (0)}
   \begin{lstlisting}
->>> import copy
 >>> a = [1, 2]
->>> b = copy.copy(a)
+>>> b = a
+>>> b.remove(1)
+>>> print(b)
+[2]
+>>> print(a)
+[2]
+  \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{How to copy an object? (1)}
+  \begin{lstlisting}
+>>> from copy import copy
+>>> a = [1, 2]
+>>> b = copy(a)
 >>> b.remove(1)
 >>> print(b)
 [2]
@@ -229,7 +198,7 @@ Note that \texttt{copy.copy} makes a \emph{shallow} copy:
 >>> D = { 'a':[1,2], 'b':3 }
 >>> print(D['a'])
 [1, 2]
->>> E = copy.copy(D)
+>>> E = copy(D)
 >>> print(E)
 { 'a':[1, 2], 'b':3 }
 >>> E['a'].remove(1)
@@ -241,12 +210,14 @@ Note that \texttt{copy.copy} makes a \emph{shallow} copy:
 
 \begin{frame}[fragile]
   \frametitle{How to copy an object? (3)}
-To make a copy of nested data structures, you need \texttt{copy.deepcopy}:
-  \begin{lstlisting}
+  To make a copy of nested data structures, \\
+  you need \texttt{copy.deepcopy}:
+\begin{lstlisting}
+>>> from copy import deepcopy
 >>> D = { 'a':[1,2], 'b':3 }
 >>> print(D['a'])
 [1, 2]
->>> E = copy.deepcopy(D)
+>>> E = deepcopy(D)
 >>> print(E)
 { 'a':[1, 2], 'b':3 }
 >>> E['a'].remove(1)
@@ -255,6 +226,50 @@ To make a copy of nested data structures, you need \texttt{copy.deepcopy}:
 >>> print(E['a'])
 [2]
   \end{lstlisting}
+\end{frame}
+
+
+\part{Appendix}
+
+\subsection{Mutable vs immutable}
+
+\begin{frame}[fragile]
+  \frametitle{Mutable vs Immutable}
+  Some objects (e.g., \texttt{tuple}, \texttt{int}, \texttt{str})
+  are \emph{immutable} and cannot be modified.
+\begin{lstlisting}
+>>> S = 'UZH'
+>>> S[2] = 'G'
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: 'str' object does not support item assignment
+\end{lstlisting}
+
+
+  \+
+  \texttt{list}, \texttt{dict}, \texttt{set} and user-defined objects
+  are \emph{mutable} and can be modified in-place.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Dictionary, sets and mutable objects}
+
+  Not all objects can be used as dictionary \emph{keys} or items in a
+  set:
+  \begin{itemize}
+    \item
+      \textit{Immutable} objects \textbf{can be} used as \texttt{dict} keys or set items.
+    \item
+      \textit{Mutable} objects  \textbf{cannot be} used as \texttt{dict} keys or set items.
+    \end{itemize}
+
+    \+
+    {\footnotesize
+      (Explanation for the technically savvy: a dictionary is
+      essentially a \href{http://en.wikipedia.org/wiki/Hash_table}{Hash
+        Table}, therefore keys of a dictionary must be \textit{hashable}
+      objects.  If objects were allowed to mutate, their hash value
+      would change too and we would lose the mapping.)}
 \end{frame}
 
 
