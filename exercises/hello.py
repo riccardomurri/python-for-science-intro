@@ -13,4 +13,5 @@ def greet(name):
   
 # the following is just for demo purposes during the course,
 # it should not appear in a real module (see above).
-greet("world")
+import sys
+print("Greetings from `hello.py`", file=sys.stderr)
