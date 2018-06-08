@@ -6,7 +6,7 @@
 \usetheme[informal]{s3it}
 \usepackage{s3it}
 
-\title[5. Exception handling]{%
+\title[6. Exception handling]{%
   A Short and Incomplete Introduction to Python
 }
 \subtitle{\bfseries Part 6: Exception handling}
@@ -109,6 +109,29 @@ finally:
 \end{frame}
 
 
+\begin{frame}
+  \frametitle{Common Exception types}
+  \small
+
+  \begin{description}
+  \item[ArithmeticError] Catch-all class for all class of number manipulation errors. \\ %(More specific classes like \texttt{ZeroDivisionError} exist.) \\
+    % \item[FileExistsError] Open an existing file with mode ``\texttt{x}'' \\
+    % \item[FileNotFoundError]   Open a \emph{non} existing file for reading only. \\
+  \item[IOError]             I/O error on open file. \\
+  \item[IndexError]          Position \texttt{i} out of bounds in a sequence access like \texttt{L[i]} \\
+    % \item[IsADirectoryError]   Try to open a directory as if it were a file. \\
+  \item[KeyError]            Key \texttt{k} does not exist in a dictionary/mapping access like \texttt{D[k]}. \\
+    % \item[NotADirectoryError]  Attempted a directory operation (e.g., \texttt{os.listdir()}) on a regular file. \\
+  \item[OSError]             A system call failed. \\
+    % \item[PermissionError]     No permission to open a file for reading or writing (e.g., belongs to a different user). \\
+  \item[TypeError]           Argument of wrong type passed to function.  For example: a \texttt{datetime} object passed to \texttt{int()} or \texttt{float()}. \\
+  \item[ValueError]          Argument has the right type but an invalid value.  For example: convert a string to integer but string does not contain a number. \\
+  \end{description}
+
+  For more, see: \url{https://docs.python.org/3/library/exceptions.html}
+\end{frame}
+
+
 \begin{frame}[fragile]
   \frametitle{Raising exceptions in your code}
   Use the \lstinline|raise| statement with an \texttt{Exception}
@@ -134,6 +157,16 @@ if an_error_occurred:
     exactly the same output of \lstinline`load_data()`, i.e. minimize the number
     of rejected input lines.
   \end{exercise*}
+\end{frame}
+
+\begin{frame}
+  \begin{exercise*}[6.B]
+    Write a function \lstinline|read_csv(p)| which reads a CSV
+    (\emph{Comma-sSparated Values}) file and returns a list of all
+    rows in it.  A \emph{row} will be represented as a Python list of
+    (string) items.
+  \end{exercise*}
+
 \end{frame}
 
 

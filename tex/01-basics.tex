@@ -215,43 +215,6 @@ TypeError: unsupported operand type(s) for /: 'str' and 'int'
 
 
 \begin{frame}[fragile]
-  \frametitle{Assignment, II}
-
-  \textbf{Python variables are just ``names'' given to values.}
-
-  \+
-  This allows you to \emph{reference} the string \texttt{'Python'}
-  by the \emph{name} \texttt{a}.  But also by another name \texttt{b}:
-
-  \+
-  \includegraphics[width=1.00\linewidth]{fig/a=b.pdf}
-
-  \+
-  The \emph{same} object can be given many names!
-
-  \+
-  \begin{seealso}
-    \scriptsize \url{http://excess.org/article/2014/04/bar-foo/}
-  \end{seealso}
-\end{frame}
-
-
-\begin{frame}[fragile]
-  \frametitle{The \texttt{is} operator}
-
-  The \texttt{is} operator allows you to test whether two names refer
-  to the same object:
-\begin{lstlisting}
->>> a = 1
->>> b = 1
->>> a is b
-True
-\end{lstlisting}
-
-\end{frame}
-
-
-\begin{frame}[fragile]
   \frametitle{Basic types}
   Basic object types in Python 3:
   \begin{description}
@@ -275,71 +238,6 @@ True
 {\color{red}\bfseries Out[3]:} str
 \end{semiverbatim}
 \end{frame}
-
-
-\part{Appendix}
-
-\section{Caveats}
-
-\begin{frame}[fragile]
-  \frametitle{All variables are references}
-
-  In Python, \textbf{all objects are ever passed by reference}.
-
-  \+
-  In particular, \textbf{variables always store a reference to an
-    object}, never a copy!
-
-  \+
-  Hence, you have to be careful when modifying objects:
-\begin{lstlisting}
->>> a = [1,2,3]
->>> b = a
->>> b.remove(2)
->>> print(a)
-\end{lstlisting}
-  \only<1>{%
-\vspace{-1.5em}
-\begin{semiverbatim}
-\emph{???}
-\end{semiverbatim}
-    \begin{center}
-      \textbf{Q}: How many items are in the \texttt{a} list now?
-    \end{center}
-  }%
-  \only<2>{%
-\vspace{-1.5em}
-\begin{semiverbatim}
-[1, 3]
-\end{semiverbatim}
-
-   \+
-   \href{http://tinyurl.com/cq3tcab}{Run this example} in the
-   \href{http://pythontutor.com/}{Online Python Tutor} to better
-   understand what's going on.
-
-   \+
-   {\small \em
-     This applies particularly for variables that capture the arguments
-     to a function call!}
-}%
-\end{frame}
-
-
-\begin{frame}[fragile]
-  \frametitle{All variables are references (demo)}
-
-  \href{http://www.pythontutor.com/}{www.pythontutor.com}
-  \+
-
-  \only<1>{\includegraphics[width=1.2\textheight]{fig/t1_screenshot_1.png}}
-  \only<2>{\includegraphics[width=1.2\textheight]{fig/t1_screenshot_2.png}}
-  \only<3>{\includegraphics[width=1.2\textheight]{fig/t1_screenshot_3.png}}
-  \only<4>{\includegraphics[width=1.2\textheight]{fig/t1_screenshot_4.png}}
-
-\end{frame}
-
-
 
 \end{document}
 

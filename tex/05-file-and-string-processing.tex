@@ -206,6 +206,47 @@ with open(filename, 'r') as stream:
 \end{frame}
 
 
+\begin{frame}
+  \frametitle{File open modes}
+  \begin{center}
+    \begin{tabular}{>{\tt}rl}
+      {\rm\em ~~~~~First char.}
+      & {\rm\em Open file for \ldots}
+      \\
+      \texttt{r}
+      & reading
+      \\
+      \texttt{w}
+      & writing, position at beginning of file
+      \\
+      \texttt{a}
+      & writing, position at end of file (append)
+      \\
+      \texttt{x}
+      & writing, create new file (error if exists)
+      \\
+    \end{tabular}
+
+    \+
+    \begin{tabular}{>{\tt}rl}
+      {\rm\em More char.'s}
+      & {\rm\em Open file for \ldots}
+      \\
+      \texttt{+}
+      & reading \emph{and} writing
+      \\
+      \texttt{b}
+      & use \texttt{bytes} for I/O operations
+      \\
+      \texttt{t}
+      & use \texttt{str} for I/O operations (default)
+      \\
+    \end{tabular}
+
+    \+ Run \texttt{help(open)} to get all details.
+  \end{center}
+\end{frame}
+
 \begin{frame}[fragile]
   \frametitle{More on File I/O}
 
@@ -241,6 +282,25 @@ with open(filename, 'r') as stream:
 
 
 \begin{frame}[fragile]
+  \frametitle{The `{\ttfamily\bfseries in}' operator (1)}
+
+  Use the \lstinline|in| operator to test for presence of an item in a
+  collection.
+
+  \begin{describe}{\lstinline|x in S|}
+    Evaluates to \texttt{True} if \lstinline|x| is equal to a \emph{value}
+    contained in the \lstinline|S| sequence (list, tuple, set).
+  \end{describe}
+
+  \begin{describe}{\lstinline|S in T|}
+    Evaluates to \texttt{True} if \lstinline|S| is a substring of
+    string \lstinline|T|.
+  \end{describe}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
   \begin{exercise*}[5.D]
     Write a function \lstinline|load_data(filename)| that reads a file
     containing one integer number per line, and return a list of the
@@ -259,15 +319,6 @@ with open(filename, 'r') as stream:
   \begin{exercise*}[5.E]
     Write a function \lstinline|fgrep(s, p)| which returns a list of
     all lines in file \texttt{p} which contain string \texttt{s}.
-  \end{exercise*}
-\end{frame}
-
-\begin{frame}
-  \begin{exercise*}[5.F]
-    Write a function \lstinline|read_csv(p)| which reads a CSV
-    (\emph{Comma-sSparated Values}) file and returns a list of all
-    rows in it.  A \emph{row} will be represented as a Python list of
-    (string) items.
   \end{exercise*}
 \end{frame}
 
