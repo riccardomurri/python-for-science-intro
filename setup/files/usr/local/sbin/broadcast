@@ -1,0 +1,133 @@
+#! /bin/sh
+#
+me="$(basename $0)"
+
+## operational defaults
+
+overwrite='--update'
+dry_run=''
+
+
+## usage info
+
+usage () {
+cat <<EOF
+Usage: $me [options] PATH [PATH ...]
+
+Copy each the given files (or directories) into each user's home directory.
+
+
+Options:
+
+  --just-print, -n  List files that would be copied,
+                    but do not actually copy them.
+
+  --ovewrite, -w    Overwrite existing files with copy;
+                    by default this is done only if
+                    destination is older than the source file.
+
+  --verbose, -v     Verbosely report about operations.
+
+  --help, -h        Print this help text.
+
+EOF
+}
+
+
+## helper functions
+die () {
+  rc="$1"
+  shift
+  (echo -n "$me: ERROR: ";
+      if [ $# -gt 0 ]; then echo "$@"; else cat; fi) 1>&2
+  exit $rc
+}
+
+warn () {
+  (echo -n "$me: WARNING: ";
+      if [ $# -gt 0 ]; then echo "$@"; else cat; fi) 1>&2
+}
+
+have_command () {
+  type "$1" >/dev/null 2>/dev/null
+}
+
+require_command () {
+  if ! have_command "$1"; then
+    die 1 "Could not find required command '$1' in system PATH. Aborting."
+  fi
+}
+
+is_absolute_path () {
+    expr match "$1" '/' >/dev/null 2>/dev/null
+}
+
+
+## parse command-line
+
+short_opts='hnvw'
+long_opts='dry-run,just-print,no-act,help,overwrite,verbose'
+
+
+# test which `getopt` version is available:
+# - GNU `getopt` will generate no output and exit with status 4
+# - POSIX `getopt` will output `--` and exit with status 0
+getopt -T > /dev/null
+rc=$?
+if [ "$rc" -eq 4 ]; then
+    # GNU getopt
+    args=$(getopt --name "$me" --shell sh -l "$long_opts" -o "$short_opts" -- "$@")
+    if [ $? -ne 0 ]; then
+        die 1 "Type '$me --help' to get usage information."
+    fi
+    # use 'eval' to remove getopt quoting
+    eval set -- $args
+else
+    # old-style getopt, use compatibility syntax
+    args=$(getopt "$short_opts" "$@")
+    if [ $? -ne 0 ]; then
+        die 1 "Type '$me --help' to get usage information."
+    fi
+    set -- $args
+fi
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --overwrite|-w) overwrite='' ;;
+        --dry-run|--just-print|--no-act|-n) dry_run='--list-only' ;;
+        --verbose|-v) verbose='-v' ;;
+        --help|-h) usage; exit 0 ;;
+        --) shift; break ;;
+    esac
+    shift
+done
+
+
+## main
+
+require_command rsync
+require_command sudo
+
+my_uid=$(id -u)
+
+getent passwd | (
+    while IFS=: read name _ uid gid gecos home shell; do
+
+        if [ "$uid" -lt 1000 ]; then
+            continue
+        fi
+
+        if [ "$uid" -eq "$my_uid" ]; then
+            echo "$me: INFO: Will *not* overwrite files of invoking user '$name'!"
+            continue
+        fi
+
+        if [ "$home" = "$PWD" ]; then
+            echo "$me: INFO: Will *not* overwrite files in invocation directory '$PWD'!"
+            continue
+        fi
+
+        echo "$me: INFO: Copying files into '$home' ..."
+        sudo rsync -SCHaxER --chown="${uid}:${gid}" $verbose $overwrite $dry_run "$@" "${home}/"
+    done
+)

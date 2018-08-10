@@ -1,0 +1,280 @@
+---
+#
+# Set up JupyterHub VMs for the "Python intro" course.
+#
+# Run with::
+#
+#     ansible -i inventory.file --become -v setup.yml
+#
+
+- name: Set up users
+
+  hosts: all
+
+  #
+  # Install required SW that's not available from std Ubuntu repos
+  #
+
+  tasks:
+
+    - name: Create `instructors` and `students` groups
+      tags:
+        - passwd
+      group:
+        name: '{{item}}'
+        state: present
+      with_items:
+        - instructors
+        - students
+
+    - name: Create accounts for instructors
+      tags:
+        - passwd
+      user:
+        name: '{{item.name}}'
+        uid: '{{item.uid}}'
+        group: '{{item.group}}'
+        password: '{{item.password}}'
+        update_password: on_create
+        state: present
+      with_items:
+        #
+        # Entries in this table were generated with the following BASH 1-liner::
+        #
+        #     uid=1001; \
+        #     for user in rmurri ubuntu; do \
+        #       xkcd-mkpasswd | ( \
+        #          read cleartext; \
+        #          crypted="$(mkpasswd -m sha-512 "$cleartext")"; \
+        #          echo "- { name: '$user', shell: '/bin/bash', uid: '$uid', group: 'instructors', password: '$crypted' }  # $cleartext" \
+        #       ); \
+        #       uid=$(expr $uid + 1); \
+        #     done
+        #
+        # Generate images to distribute passwords via email using::
+        #
+        #   convert -background white -fill black -font Courier -pointsize 72 "label:$password" password.gif
+        #
+        # instructors
+        - { name: 'rmurri', shell: '/bin/bash', uid: '1001', group: 'instructors', password: '$6$WurJIXBdXlbc$uS/JduybhwlEz1/WDYylzwchP2QEsSN9MW2KHuQCXJALQSA3zDTuiu/hiC7E2wlaSU7DdtRTYj9SpsNDObno41' }  # vesting-nether-blasphemers-rouge
+        # students
+        - { name: 'py01', shell: '/bin/bash', uid: '1010', group: 'students', password: '$6$fu4JC1jl.CwCHmZ$nj23bNmFOWQUREOUQG1.66UJpN2262Fu/4aIKS2MMBFZCRXp7W64hjtW4G5eMekNz1GOf9bH6QZ/5r5RJKcJp1' }  # hided-xenophobic-Pyrenees-pagination
+        - { name: 'py02', shell: '/bin/bash', uid: '1011', group: 'students', password: '$6$O0ftmHGSnVGuP$ZN/c35jXHRzpozloj9.2wjfMKiA3pmlr1SvLHePfjWuaZ5wVI.0Vwwh2rLIsMbOCY845wWGKyyRwR.79dq.OD1' }  # relating-thermoplastic-bays-applicants
+        - { name: 'py03', shell: '/bin/bash', uid: '1012', group: 'students', password: '$6$qfCEsk5kQGhws0MQ$0Jk6Xhz.t4zYzr5oVytmKl4v1kQMwu8d8ja680ixdwindAzzbhL7QnjGLjyS/t6ZccGPzpB6gkypZAEdsm/Nb0' }  # officer-Donizetti-Wozzeck-causeless
+        - { name: 'py04', shell: '/bin/bash', uid: '1013', group: 'students', password: '$6$wCvBeBdcWs$PQRs0cfe1juBk.wJw3IBfbqON/qdOe6.sr4TdOTcqWgOZFXQ.JlGqU3osKBk1ZK7/Ys2NlWURyQzxVfvLwFD40' }  # gallstones-Dominic-mortician-mother
+        - { name: 'py05', shell: '/bin/bash', uid: '1014', group: 'students', password: '$6$9pX70x4dbKdL$KNCytrmYJ2A3U/wjr2uEVSghWZS1ZN0Zvp4bE4aC1OgB6SfN7sQ/usUWQNCb.QBZJo81UD/p.nheLBWSEB.S6.' }  # suffocated-Madison-acquiring-befouling
+        - { name: 'py06', shell: '/bin/bash', uid: '1015', group: 'students', password: '$6$teGUDTahzctZyzi$ZjTbjV/iJe/8qH7AsyaQfUWDwunLP7JSHnJzDplL1e84aduRhMLHdx0q./0siLN1veWnE5v9Ro5YefJiIZWxk.' }  # unsubscribing-mashed-ostriches-Wyo
+        - { name: 'py07', shell: '/bin/bash', uid: '1016', group: 'students', password: '$6$Cc5GPpjQ$RQCM.M1icK3UzLYnzS1ziw9CcSnogL/GOaEZuK9V6r62jWIp/F6RqzDUPG2aJ62R0HB8Iv0QwKxGWN8KepirT1' }  # committal-southbound-goal-bearers
+        - { name: 'py08', shell: '/bin/bash', uid: '1017', group: 'students', password: '$6$gT7kuKE7R$IiRmEt2Zet3scVWdNh51hV8JXSwX2CAKxKA9ivEb1KB8cSY0UnL4FDaDvOHTJqog/OaZ3cMv2EVW2AfRcc91l1' }  # regionally-swipe-disputation-sweet
+        - { name: 'py09', shell: '/bin/bash', uid: '1018', group: 'students', password: '$6$/h3jkEX8W$0iaTFbEqD9I3iwy9Tkn0Px90o16VdiahtKmHCzqG9IsxaUznfZcv.214mI5AWk3DyMoO6GM2Pco6.X0yIsm02.' }  # superpower-crag-strikeouts-umbilicuses
+        - { name: 'py10', shell: '/bin/bash', uid: '1019', group: 'students', password: '$6$thAoYcm5$YzI6BavokOw83JBr2qrQ30nW6WwXP5KMKqk.PlVw4y5.NYMVocKsc6//yIMzS4dAviuYisNPOLLKrW7mpmYX51' }  # obviously-Heep-suitable-misquoted
+        - { name: 'py11', shell: '/bin/bash', uid: '1020', group: 'students', password: '$6$L0/z5DOufxSOfsZJ$BC3z1sIztSdYRpJq4uMdHg/zCDbZ.u5jIxIMQBUQB0fFBEeXTKYNIL6O.2Oa3bwhWXg0N/X2DRcG.iVv8Q0al/' }  # visualizing-pummel-exaggerate-mailings
+        - { name: 'py12', shell: '/bin/bash', uid: '1021', group: 'students', password: '$6$xVZTLMML8wnXBwo$1DqhTVdSNTkzrDg/ZdTYf0iNPcUc15D3b8BeztgHv.fpfUz5AWc5rbbNdYhbsvQPtZzfFGeEPAkW96cL47tf//' }  # Marvell-chemists-intellectuals-treadling
+        - { name: 'py13', shell: '/bin/bash', uid: '1022', group: 'students', password: '$6$VJTtCt8TR01AfO$2eSC9UZ/jTS108Zimm3qQJ5D8yj6zAkDQb1.7/0sIa2sRCdNfwFECi.lCrHlEFKyoSqCm2IjMyCueYB69Rigq/' }  # clandestine-cytoplasm-was-custards
+        - { name: 'py14', shell: '/bin/bash', uid: '1023', group: 'students', password: '$6$IC1QOyIaZihx$HVFopq4cmdwh/g3TBEGzz2l0H5ytWaZce/g8zHkqgS.Flxhbdv.y7HNzWsnRiRc8aywvAWQqHrOynsqHOfV0m.' }  # smuggle-flora-hobbyhorses-endearingly
+        - { name: 'py15', shell: '/bin/bash', uid: '1024', group: 'students', password: '$6$Jw9jWVoBY2jgHX$QI8WoJV8ge5oth4hBXMWCioivzp6mQhr6CxMtzpHti3s8H8DvYRlIHKSQAeZa4FhmbPxuC7MYJWZzWtzMGXV.0' }  # expects-Afrikaans-make-coincidentally
+        - { name: 'py16', shell: '/bin/bash', uid: '1025', group: 'students', password: '$6$xcbo.2iX$a8JskyTEUZxTUznHwnRnZ6ZTuAWAiU.1f2lRi1b/LtUNsYMyvkWnV3t/GMMXs3YNYwPjR3LmeEkaz6CmfKVaK/' }  # anaemic-fulfil-sodomites-pawned
+        - { name: 'py17', shell: '/bin/bash', uid: '1026', group: 'students', password: '$6$L9cDwNVfljZT94t$H7fZWDRzjCM6HHStQ1GcZ.scBfTTzfGLQ.yRcM5oGQ7gjNBGneSIlV9mYA0tQjMXHChKE011x0Ums7PRnp2mt0' }  # steely-unceasingly-pretentiousness-darts
+        - { name: 'py18', shell: '/bin/bash', uid: '1027', group: 'students', password: '$6$EZXTCJdh$vcvN1j0Wh524PArA7xX328uJlywXTDMYl86w/kbYthoCgVZsBtu6h830Uek2ABa5CfhG5DsfAg2Fsi.o5D78J.' }  # affix-supping-lammed-retiree
+        - { name: 'py19', shell: '/bin/bash', uid: '1028', group: 'students', password: '$6$FDudrIE0ovuPEe$zgvwGySVM6BTGZ/J8ywl4U2dAA/B9/sQBZBTai1JsjIfR2.PDkhwvKkVW8AUotJh.oYlv9ZazkylQINQEghb40' }  # moonlighting-dishonesty-selfless-chanciest
+        - { name: 'py20', shell: '/bin/bash', uid: '1029', group: 'students', password: '$6$w3.UZ3PSx$JFrlUDLHZDAAFYYNR9R0awj24nv7YqvzAyrGkGgg72/F.cKKX4gVpEPILPKshY9h7CPdEJYqalAEaz6CD8Nyk0' }  # shakers-rotational-commemorative-stewarding
+        - { name: 'py21', shell: '/bin/bash', uid: '1030', group: 'students', password: '$6$28zShOq/2cNR$vi67AlA.ZrbHToOOA8KwHHd1QM4Y9qvufWuELmxvWiTp3Xi7PxCMN5Trk6tONnZDp0k9URodSXQ.X09bKf4Wg.' }  # harping-cleared-flagging-reedier
+        - { name: 'py22', shell: '/bin/bash', uid: '1031', group: 'students', password: '$6$3bvzo7i6qtremgc$qJwkYkmd36dHYQwAbwH7vhbJDDD8aQ4234V9gN.3nwn4m51y8cq2cIhuVFDgoPY4XgwG82ceOjdsuvtK9DaBE.' }  # circus-coiled-lasagnas-motorcades
+        - { name: 'py23', shell: '/bin/bash', uid: '1032', group: 'students', password: '$6$huGDTyLw$BE62mrL1HqR/aRBcNg.UR4SVxCc.SuDsxjFgX7qrxBnQKq3MM/7EeHkKWfJgesW/IstPCdEbAOhc02JxVk..71' }  # seepage-Frankie-squeaks-unrewarding
+        - { name: 'py24', shell: '/bin/bash', uid: '1033', group: 'students', password: '$6$hJj.xZpz2$o7fNhVF4UrDs6166PjzritviCrxW0/yzk8MSqfAIVKYT1QKsgnz76jXcJvLZRlZyTw55fwQehU39yYb2YE6Jc.' }  # fashioning-cookie-origination-financially
+        - { name: 'py25', shell: '/bin/bash', uid: '1034', group: 'students', password: '$6$tjLJf5W1lqM.$lk5MFChxG9GxfwJyFW4iykcKd9JcDH5/d/NMXjwj64HqtI7Gs1Mf7Gmgm9ANlEc/X4C9LfAz02a3Y8kjKu11q1' }  # soloist-kneaded-throng-inhalation
+        - { name: 'py26', shell: '/bin/bash', uid: '1035', group: 'students', password: '$6$OpD1CGSdow$Vm8qh.q4ClRixVY1wM6pmNN9A1M.k6JQIzeEENI0xIubWupUP.7fnqEvGGkXWFq/vhSweEjVIzzLgGDH3/XtC.' }  # motivation-mace-stuccos-useless
+        - { name: 'py27', shell: '/bin/bash', uid: '1036', group: 'students', password: '$6$LVuCGLBa$dsOCVwZ6kP7D4aovHCSWtKKxi9AmHItbbvqLq1SPeASGQoqh4hlWDlrgjWZaHlAtkg888VbXKzS6ySYUD.sJ8.' }  # specifics-mushiest-demises-painters
+        - { name: 'py28', shell: '/bin/bash', uid: '1037', group: 'students', password: '$6$0xTLYGYoGdRH$zzYVoZBdedQQNLF2VvhgYavUiU0OxipREhxbbM0gNqdEDd6RHComnd3fhlPaIO0mJkYM1grh/2Mcg4kICDEiJ0' }  # flapping-caudal-Connors-tailwind
+        - { name: 'py29', shell: '/bin/bash', uid: '1038', group: 'students', password: '$6$98C3gsclAIoTETKW$02vE1NvEGxMO.ucl/nxGLMrKHIP2SF.4RClXfcoXt/fF9XRMOBqRGNmEJekdL2dMLASNHLvppTkQDEKBPXKro0' }  # eyeteeth-avenge-plagiarizes-caroling
+        - { name: 'py30', shell: '/bin/bash', uid: '1039', group: 'students', password: '$6$M1/f33coATbpr$8FKxBOfVyC5T45MQJ89Q3UBCBykLk7WsQmRezz4rJ08h9JnlU8wH2n1SNkmJuse0o2vDxgbsVFMnQuj6Tp97D0' }  # rejoices-dodging-rewrites-chiropodist
+        - { name: 'py31', shell: '/bin/bash', uid: '1040', group: 'students', password: '$6$AP1xDAQSfXkv$P/GLDKB.0O/ornpv81VmKZnMiXpbuTSmMgGnQHW7kbvX57jCovXHqicdcKZqkG1FV4pa79Gu1mOBmoWkFJrYt.' }  # uncountable-visioned-Blackfoot-synthetically
+        - { name: 'py32', shell: '/bin/bash', uid: '1041', group: 'students', password: '$6$pllXCvLj7aQgwO$0av93wZwf56sfwvSMPJqp8PJuaZQVJznwglmjlWu82pcZGgv8HbiStey49FqXInRyltwzQjHA2C8Pl1ZauMl30' }  # newels-wooden-Yaobang-tourmaline
+        - { name: 'py33', shell: '/bin/bash', uid: '1042', group: 'students', password: '$6$f6zIo37e9tH5.Rc$K3Geo4oPOpn0GTFSCIC4yE1nv6tuG7weMqwBYuRFFbr2lAgFTjIwu1P3qCyLnCjq00Od7lRcyP.ZSzOCJAqKW1' }  # astir-Crux-palpably-armorers
+        - { name: 'py34', shell: '/bin/bash', uid: '1043', group: 'students', password: '$6$1nArLncjzrfMvRt$LwIgiE5TZU5/sFQvmxn5y/XutHw3YWRTnbrQWMTNmiPycDOTzPa2zspaha04pfMf3NkG7TrEhh.Fdr3IfJsai1' }  # compactly-serpent-horsemen-depressing
+        - { name: 'py35', shell: '/bin/bash', uid: '1044', group: 'students', password: '$6$6f6Mjemx4Jv$e9oHDHrXdRFX8NKSvgq8RdxWdK93SaYP1S.ApG8PHJoEfEB4GPN53Jp6Iy5HMPlQwQp5MykdjIfVYwV8TVHGO/' }  # ultraviolet-splatted-unorthodox-outlined
+        - { name: 'py36', shell: '/bin/bash', uid: '1045', group: 'students', password: '$6$A49mvOF5V0$8eiw0i3dLzQlTQ68Z3CNDmrW6QPvWWl.aEKbPsIVUqUH91e3Bab85bqwKodAp3TN748jQgHBU5wa2KsUKRrua.' }  # decreased-lamppost-graduation-Huxley
+        - { name: 'py37', shell: '/bin/bash', uid: '1046', group: 'students', password: '$6$zbsGOvSLLVtG$KSMrtTjPpwCQ6y/8YfMCPVPMxSxBEyE1DPbeVmV7kHLQVDAsb8tQT36xKW2dSUXVXBvtuBtCF8BrQllJz0o1T/' }  # Geminis-dicta-prism-delicatessen
+        - { name: 'py38', shell: '/bin/bash', uid: '1047', group: 'students', password: '$6$ijvqpovX/mPSyKN$n8QzcSNSQrttVTlgtmRI3hn1Qpd94/iQqjPWn5iwx2hO8DOyH2Ddgx5NdYyOjPgRzDwFtL2sd30xSP6d2a76p0' }  # represent-enjoyment-Costello-Kurtis
+        - { name: 'py39', shell: '/bin/bash', uid: '1048', group: 'students', password: '$6$d5lv8ixPbq$yMc/1JCjJS05AE3w29WAOztR.vp73rpt4Ch6fi9xGy4ggdVh3syRuUX.tMb6PCM5DkeX0TMfQbhOVKLKah75r.' }  # furies-orthographic-architectures-Riefenstahl
+        - { name: 'py40', shell: '/bin/bash', uid: '1049', group: 'students', password: '$6$WDCReh7AR0Lt3tAs$ileWS5d/6GVUyBzNf0wYpedZVpda5YpHANpFpeFSM6.8Yj5zagbS9/TK/dZF6EEKNHt.OSJeqF6hxoag96NdY/' }  # reformulated-snippier-ruddier-strangest
+        - { name: 'py41', shell: '/bin/bash', uid: '1050', group: 'students', password: '$6$s14jWlTO4n$2b5o4NAlBcQNuXQ7nDV9RwhEepVqhdmo.MPdqeLL.ww48Haqrpq4QXNMatNtsVgF2snBoSxLSHiYiJLFNpEQ60' }  # deodorized-albinos-miniatures-gimlet
+        - { name: 'py42', shell: '/bin/bash', uid: '1051', group: 'students', password: '$6$uiczuZ/xYZMl4hR$XimMLqKO0WCh0KbuXNHh4E9GKfZ/cesV/WR2pF8bbiESi3A8HqiZRwmbcMSn8Mq4FRg/jScpbbavkkx330x400' }  # refreshment-Pygmalion-sympathetically-slaughter
+        - { name: 'py43', shell: '/bin/bash', uid: '1052', group: 'students', password: '$6$vS4zangDEsqIUq1$1K8cVOTJLaln.L61L.iimYBPeK0FHgFtnDfY2rL03ciCOik2kEAnbb60XSJ1VzCAma566XZkS1k5AhpzJtu/5/' }  # fireball-luridly-anatomists-intervenes
+        - { name: 'py44', shell: '/bin/bash', uid: '1053', group: 'students', password: '$6$2xo8Alh0vk412$isUlMfbMsnRf.bPkoSUqtt3j9iTXqF/xyyn160C7iiQheEBMMy4kTbs114hU07zhecTZ9jP91o2/aC8AvvdaS1' }  # southerly-heinously-honeycombing-ramify
+        - { name: 'py45', shell: '/bin/bash', uid: '1054', group: 'students', password: '$6$p9soZglQ$HBBRpmop993rJllyzPlTL1LhhyMYO8MOMsB0Mo8aJGj7Pr.tgwxq2lSPO5e2KAua/6YNpNQ6rABo3rEE7SbHi0' }  # unbridled-glimpse-McVeigh-Uriah
+        - { name: 'py46', shell: '/bin/bash', uid: '1055', group: 'students', password: '$6$4f2GlW1vnD$cZapQUZUm6eiWcjz04Tgct0jeFdFRM5j.F5vCmWXu4PTQzIlKTUFtEy9/DF1VI6BF5tjqU0Uq/usMKG18wboi1' }  # parading-Bollywood-desiring-educators
+        - { name: 'py47', shell: '/bin/bash', uid: '1056', group: 'students', password: '$6$E1UHRUzun4y3f4t$mgUY2Dzo5O.TQgcrYwq.7FUGi8newdTqmRW2P/9SqdoYcDli1uFdVdmRb08gXR/MNIa0pCu0YXsy03Q3n775r1' }  # shadowy-hangdog-brunet-cauterized
+        - { name: 'py48', shell: '/bin/bash', uid: '1057', group: 'students', password: '$6$Ru5PfCIJRHOZo3HR$q2vhdSr/PcVdoOaojBzTgyDFZn0xIUWkGOo/79DYyAj.ZpPpr7cdV.INZdNyDyZF0MHi0Y5Pgf.n50akwk5rp.' }  # Dutchman-involuntarily-documentation-immigrates
+        - { name: 'py49', shell: '/bin/bash', uid: '1058', group: 'students', password: '$6$CbFcXVXCa5ae$eb8uzrhJw8uNjDriY7iBuvdV4taZN8wicxF54zZfQ2DyFQSrt1f73TCVKCcemATOQbxGwysWkERxniz7gL/ZR1' }  # isometric-terrorized-batches-bespoken
+        - { name: 'py50', shell: '/bin/bash', uid: '1059', group: 'students', password: '$6$GHo1O/Mz$IydGJL7nuH/sXjTYKjQp19aQmhV5MXubkJRB7.4/dd0gcfHDSf7Y4gkQ5YpZVlr/jo7q0chnvyU/TC9a6jxLN0' }  # splices-whats-wayfarers-Maiman
+        - { name: 'py51', shell: '/bin/bash', uid: '1060', group: 'students', password: '$6$8rw8aa1TA$m4pLXuPZyjDo9tJki/Nsr4wr6uAaaY7dE6e2ZNxsK9kN6.W4es.GB/nAlqHgFlNZwidMtXky7S7BpYbKcoElN1' }  # teals-temptingly-ants-envoys
+        - { name: 'py52', shell: '/bin/bash', uid: '1061', group: 'students', password: '$6$sDecEiuV2.K$KP4XV3rCdqLgRHIgadyEDk0FVG2Z6vcb/7qmnBDbKMsEBeXaJKtS9/eswxu8iQOGjgaLI/Gx3PjDW9w5rZEtN1' }  # abstaining-halitosis-derangement-perplexing
+        - { name: 'py53', shell: '/bin/bash', uid: '1062', group: 'students', password: '$6$9HvZBysT6xm$JkHUNCRGMUWrmUQdPR5e/2u0OW8BZLQg1S4W9JUQM9cQVPDZypGqkzZquNjUBIDuv68nryia369oFLqQS2ov8/' }  # fats-libation-languishes-medalists
+        - { name: 'py54', shell: '/bin/bash', uid: '1063', group: 'students', password: '$6$feX763HV$g2WgCnrosPI4t22WNFOkKLEbZoVPog3nTe0kQsbf748PxohZi3cPFCnDDuPIKRT/eF0GoHSKO9IAdIKo0eH3c.' }  # milieux-intellectualism-condensations-immortalizing
+        - { name: 'py55', shell: '/bin/bash', uid: '1064', group: 'students', password: '$6$6kyVMpTT$1RMH8aY5CUwegqaGgIIH6FAQXUZmXVHkPg2IMrijMEApD3.LvZLJL1mqCNzZB6CtOACHcLvvik98hwreXQU7s0' }  # Sirius-puncture-dislocate-hostelries
+        - { name: 'py56', shell: '/bin/bash', uid: '1065', group: 'students', password: '$6$22urbwyQVXhaQV8$Bjqa.7012MOrH6EjfpfTTodXY2x/qrOPQpqAtrUAkdokHKmS25ong4k7TkIPp4ZEqo0JGvLMbM6ooxpkhoycN0' }  # preterites-freeloaded-kickback-lief
+        - { name: 'py57', shell: '/bin/bash', uid: '1066', group: 'students', password: '$6$RZJcuhH1$ojfv9VqMFmIRP/J.BEnqmJaVyMXi3i3jl9qAE0DbHncpd.sNgPDyTI0PXaEu3b6Df17txtV1eU2ZpgxqpWta20' }  # nickel-resided-skirmishes-denigrate
+        - { name: 'py58', shell: '/bin/bash', uid: '1067', group: 'students', password: '$6$GZlIE/EvV$vWe.azXoPH3/qP2pWxobtTB06yEsdls4zqS2QfMcdfoAzWWSDD3ZhW51owNtnH5Qst9B9Is5OiR/EwFGCGIxa0' }  # literals-noblewomen-bounding-priestly
+        - { name: 'py59', shell: '/bin/bash', uid: '1068', group: 'students', password: '$6$WTOk1CTZyzYu6lAd$OxcAzS8VxGhpzZwRdpyEK5aVu.XmowCp7CL4OwZiQ5vIDBKinTggHyeAn0jC5ojfVhsT1vsCNQWuAerzTz4GU.' }  # pause-Polaroid-characterizes-ulcers
+        - { name: 'py60', shell: '/bin/bash', uid: '1069', group: 'students', password: '$6$6aLS6IE92S$i5hF92a.9l66VdYiicchm2CNEBPhEzRNy598hkTguxWlF5YwJdD3QirSqZ08CES.KjRD.mNnlax9yTo.GW5Q61' }  # commissions-Mimosa-proportionals-conjoint
+        - { name: 'py61', shell: '/bin/bash', uid: '1070', group: 'students', password: '$6$LhQjlzyopYWJ6$Ly8Rgg5WPCUuzzieq4y.jofSkcohgrGSoFotjHlfie5FrcUgL9KmZrBYWfmyMroMo4fuZUgvOtplVzB0YjR3t0' }  # legrooms-joyrides-brokerages-esoteric
+        - { name: 'py62', shell: '/bin/bash', uid: '1071', group: 'students', password: '$6$5bTZShvUeXJXZT$a08l44KUDnY8lLpCdX6khbiptlYaj.D/3afR8ktraF5xYDrGGzqXfe10fYLZLxhkIyvIAf.y5zSyeAJNpkyIs/' }  # busily-scintillas-daddy-qualify
+        - { name: 'py63', shell: '/bin/bash', uid: '1072', group: 'students', password: '$6$.w6qJbvvhkG$xI0UIN/FeyR52SwWvEZ5qWQnGycQo0KX9vji8kmJHNRJzjFN.02pwv6JDgLt30Vboow5lQX6XjRXoo6DJgybl/' }  # Stein-noises-befog-scruff
+        - { name: 'py64', shell: '/bin/bash', uid: '1073', group: 'students', password: '$6$k5hVlTtiIotL$nWTLstCl71pg8pOLR.i9yA1/mh4Dv0wtXwQkyQ6f/LdFtGlfosWIpOkkrvlBr2bLlGwXk73Fq9Ib2ayvo23vR1' }  # finisher-laxatives-paraphrases-disproved
+        - { name: 'py65', shell: '/bin/bash', uid: '1074', group: 'students', password: '$6$xFfhyeFA$NcjcdDBrbm2zzepLn9qRgNQ.IkvbxwksxAHhhlmSJl5XZuYfwA69XQxfSPhsWyUOh8Q7PgnJ6xRyS.vlhC4Tz0' }  # hay-magic-hindquarters-reimbursement
+        - { name: 'py66', shell: '/bin/bash', uid: '1075', group: 'students', password: '$6$rfR4e0L3X7jEew7$e38MvtLKFE6cJy30E5iWS66/gWqnKYRar9JfAeF3lQknCzdxZuN3frCoEQVXCmlc1UfBFgMjf9vnlYHNF9YmU0' }  # penetrated-bakeries-proselytize-spools
+        - { name: 'py67', shell: '/bin/bash', uid: '1076', group: 'students', password: '$6$R.QVZoEI2$G94inyUzI2BYHeaM6ddci.sGkIUToSeOG/EiXKuoQ5Tm7Cbe1ARZ5CSh0PTq0awxHmc.LKr7GMnTsSEUnJRNC1' }  # congruities-Rojas-bucks-externals
+        - { name: 'py68', shell: '/bin/bash', uid: '1077', group: 'students', password: '$6$ifaPNeC.gdsdP$to/u.Z7me3jjVAx1WQ4MQJsEdD2OUssTDDOLkEFjDF5v.vyIJt4KcyGQo.c0Vvq0CtC.PHp.R7UvWGVeFCZ/E.' }  # penknives-frustrating-woolgathering-mergansers
+        - { name: 'py69', shell: '/bin/bash', uid: '1078', group: 'students', password: '$6$.mN7PNS.q4iwDz/$xXgzLfzReLUzLbQjQZ/6Ac.jB3flK4YYwJFSmkNEcYSWVmUnBb4vGh9zGLF/vL9AJDlAYuMtckvzi9RJdtfp7.' }  # selectman-gripped-blonds-stairwell
+        - { name: 'py70', shell: '/bin/bash', uid: '1079', group: 'students', password: '$6$qoEGn8ysh0Jo0q$itnN8VTXAzxF5CF2nwFelF6KYyVUGc22eeYexQViFNJl8eLMsaLNUT8ObZUBQsLWGE7Tnnd0yHn0UDTJLe0ai1' }  # persuades-firehouse-Rte-installations
+
+
+    - name: Ensure everyone gets access to their own user account via SSH keys
+      authorized_key:
+        user: "{{ item.username }}"
+        key: "{{ lookup('file', item.ssh_key) }}"
+      with_items:
+        - { username: rmurri, ssh_key: keys/riccardo.murri }
+
+    # - name: Deploy `adduser.local` script
+    #   file:
+    #     dest: '/usr/local/sbin/adduser.local'
+    #     src: 'usr/local/sbin/adduser.local'
+    #     owner: root
+    #     group: root
+    #     mode: 0700
+
+
+    #
+    # Sysadmin rights
+    #
+
+    - name: Grant `sudo` privileges to selected users
+      tags:
+        - passwd
+        - sudo
+      user:
+        name: '{{item}}'
+        groups: 'admin,sudo'
+      with_items:
+        - rmurri
+
+    - name: Ensure sysadmin SSH keys are authorized for user 'ubuntu'
+      authorized_key:
+        user: "ubuntu"
+        key: "{{ item }}"
+      with_file:
+        - keys/riccardo.murri
+
+    - name: Deploy `broadcast` script
+      copy:
+        dest: '/usr/local/sbin/broadcast'
+        src: 'files/usr/local/sbin/broadcast'
+        owner: root
+        group: root
+        mode: 0755
+
+
+- name: Install and configure additional SW
+
+  hosts: all
+
+  #
+  # Install required SW from Ubuntu repos
+  #
+
+  tasks:
+
+    - name: Update package cache (once per day)
+      apt:
+        update_cache: yes
+        cache_valid_time: 86400
+
+    - name: Upgrade all installed packages to latest version
+      apt:
+        upgrade=yes
+
+    # - name: Install required OS software
+    #   apt:
+    #     name: '{{ item }}'
+    #     state: latest
+    #   with_items:
+    #     - build-essential
+    #     - emacs
+    #     - g++
+    #     - gcc
+    #     - gfortran
+    #     - git
+    #     - graphviz
+    #     - kexec-tools
+    #     - lzip
+    #     - p7zip-full
+    #     - pdsh
+    #     - rsync
+    #     - screen
+    #     - tar
+    #     - tig
+    #     - tmux
+    #     - unzip
+    #     - vim
+    #     - xz-utils
+    #     - zutils
+
+    #
+    # More SW
+    #
+
+    # # this needs to happen after Anaconda has been installed
+    # - name: install additional Python packages into Anaconda
+    #   pip:
+    #     name: '{{ item }}'
+    #     state: present
+    #     executable: /opt/anaconda3/bin/pip
+    #   with_items:
+    #     - ggplot
+    #     - nilearn
+    #     - seaborn
+
+    #
+    # Cosmetics
+    #
+
+    - name: Set /etc/motd
+      copy:
+        src: files/etc/motd
+        dest: /etc/motd
+        mode: a+r
+      tags:
+        - motd
+
+    - name: "Disable Ubuntu's 'dynamic motd'"
+      lineinfile:
+        dest: /etc/pam.d/sshd
+        regexp: "(?x) ^\s* session \s+ optional \s+ pam_motd.so \s+ motd=/run/motd.dynamic .*$"
+        state: absent
+        create: no
+      tags:
+        - motd
+
+
+    #
+    # Course material
+    #
+
+- name: Make course material available to all users
+
+  hosts: all
+  gather_facts: no
+  tasks:
+
+    - name: Check out course material
+      git:
+        repo: https://github.com/riccardomurri/python-for-science-intro.git
+        dest: /var/tmp/
+        depth: 1
+
+    - name: Copy material to all user homes
+      shell: |
+        cd /var/tmp
+        /usr/local/bin/broadcast python-for-science-intro
