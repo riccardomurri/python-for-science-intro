@@ -49,7 +49,7 @@ So far, the material here has been used in a few occasions:
 * for the ScITS training [Introduction to Workflows with Python][x2]
   at the University of Bern on June 8, 2017.
 * for the ScITS training [Introduction to Python for science][x3]
-  at the University of Bern in September 2017 and January 2018.
+  at the University of Bern in various occasions in 2017 and 2018.
 
 [x1]: https://dynage.github.io/brainhack-zh/
 [x2]: http://www.scits.unibe.ch/training/internal_training/introduction_to_workflows_with_python
