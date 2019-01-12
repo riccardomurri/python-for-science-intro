@@ -18,7 +18,7 @@
   \\
   University of Zurich
 }
-\date{June 7--8, 2018}
+\date{January 14, 2019}
 
 
 \begin{document}
@@ -37,6 +37,7 @@
   \item[list] \emph{mutable}, possibly heterogeneous
   \item[tuple] \emph{immutable}, possibly heterogeneous
   \item[str] \emph{immutable}, only holds characters
+  \item[bytes] \emph{immutable}, only holds bytes
   \end{description}
 
   \+
@@ -52,7 +53,7 @@
 
 
 \begin{frame}[fragile]
-  \frametitle{Lists}
+  \frametitle{List basics}
   Lists are by far the most common and used sequence type in Python.
 
   \+
@@ -62,9 +63,14 @@
 >>> L = [ 'U', 'Z' ]
 \end{lstlisting}
 
-  \+\pause
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{List basics, II}
+
   You can append and remove items from a list:
 \begin{lstlisting}
+>>> L = [ 'U', 'Z' ]
 >>> L.append('H')
 >>> print (L)
 ['U', 'Z', 'H']
@@ -163,7 +169,10 @@ The \texttt{len()} function returns the number of items in any
 ['P', 'y', '3']
 \end{lstlisting}
 
-\pause
+\end{frame}
+\begin{frame}[fragile]
+  \frametitle{List mutation}
+
 You can also replace an entire slice of a mutable sequence:
 \begin{lstlisting}
 >>> L[0:2] = ['1', '2']
@@ -171,13 +180,39 @@ You can also replace an entire slice of a mutable sequence:
 ['1', '2', '3']
 \end{lstlisting}
 
-\pause
 The new slice does not need to have the same length:
 \begin{lstlisting}
 >>> L[2:] = range(5)
 >>> print(L)
 ['1', '2', 0, 1, 2, 3, 4]
 \end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Lists operators}
+  You can concatenate two lists using the \texttt{+} operator:
+  \begin{lstlisting}
+>>> [1, 2] + [3, 4]
+[1, 2, 3, 4]
+  \end{lstlisting}
+
+  \+
+  You can mutate a list \emph{in place} with the \texttt{+=} operator:
+  \begin{lstlisting}
+>>> L = [1, 2]
+>>> L += [3, 4]
+>>> print(L)
+[1, 2, 3, 4]
+  \end{lstlisting}
+
+\+
+The \texttt{*} operator also works on lists:
+  \begin{lstlisting}
+>>> L = [1, 2]
+>>> print(L*3)
+[1, 2, 1, 2, 1, 2 ]
+  \end{lstlisting}
 \end{frame}
 
 
@@ -223,33 +258,6 @@ The new slice does not need to have the same length:
   \begin{references}
     \url{https://docs.python.org/2/library/stdtypes.html#typesseq}
   \end{references}
-\end{frame}
-
-
-\begin{frame}[fragile]
-  \frametitle{Lists operators}
-  You can concatenate two lists using the \texttt{+} operator:
-  \begin{lstlisting}
->>> [1, 2] + [3, 4]
-[1, 2, 3, 4]
-  \end{lstlisting}
-
-  \+
-  You can mutate a list \emph{in place} with the \texttt{+=} operator:
-  \begin{lstlisting}
->>> L = [1, 2]
->>> L += [3, 4]
->>> print(L)
-[1, 2, 3, 4]
-  \end{lstlisting}
-
-\+
-The \texttt{*} operator also works on lists:
-  \begin{lstlisting}
->>> L = [1, 2]
->>> print(L*3)
-[1, 2, 1, 2, 1, 2 ]
-  \end{lstlisting}
 \end{frame}
 
 
@@ -425,6 +433,119 @@ def deviation(L, m):
 \end{frame}
 
 
+\part{Generators and Iterators}
+\begin{frame}
+  \frametitle{Iterators}
+
+  An \textbf{Iterator} is a generalization of a sequence: you can read
+  items out of an iterator, \emph{one at a time}. (This can be used
+  e.g. to implement unbounded sequences.)
+
+  \+
+  Iterators are \emph{read-only}:
+  you cannot set or alter items in an iterator!
+
+
+  \+
+  There are multiple ways to create iterators in
+  Python. \textbf{Generators} are special functions that implement an
+  iterator.
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Generators}
+  A \textbf{Generator} is a function that uses the \lstinline|yield| keyword instead of \lstinline|return|.
+
+  \+
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+\begin{lstlisting}
+def until_quit():
+    reply = input()
+    while reply != 'quit':
+      ~\HL{\textbf{yield} ('->' + reply)}~
+      reply = input()
+    # end
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \raggedleft
+      Every time \lstinline|yield| is executed, an item is returned
+      to the caller.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Generators, II}
+  A \textbf{Generator} is a function that uses the \lstinline|yield| keyword instead of \lstinline|return|.
+
+  \+
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+\begin{lstlisting}
+def until_quit():
+    reply = input()
+    while reply != 'quit':
+      yield ('->' + reply)}
+      reply = input()
+    ~\HL{\itshape \# end}~
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \raggedleft
+      When execution reaches the end of the function,
+      iteration stops.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Example: Generators}
+  The \texttt{for} statement can be used to loop over elements in \emph{any iterator}.
+
+  \+
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+\begin{lstlisting}
+>>> for val in ~\HL{until\_quit()}~:
+...   print(val)
+foo
+'->foo'
+bar
+'->bar'
+quit
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \raggedleft
+      Iterate over user input until \texttt{quit} is entered.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \begin{exercise*}[3.D]
+    The Collatz sequence is defined recursively as follows: given a
+    number $x$, the next item $x'$ in the sequence is given by:
+    \begin{itemize}
+    \item $x' = x/2$ if $x$ is even,
+    \item $x' = 3x + 1$ if $x$ is odd.
+    \end{itemize}
+
+    \+
+    Write a function \texttt{collatz} that takes a single starting
+    integer $x$, and iterates the Collatz sequence starting at $x$.
+    If $1$ is reached, iteration should stop.
+  \end{exercise*}
+\end{frame}
+
+
+\part{Other containers}
 \begin{frame}
   \frametitle{Other containers}
 
@@ -451,8 +572,6 @@ def deviation(L, m):
 
 
 \part{Plotting basics}
-
-
 \begin{frame}
   \frametitle{Plotting libraries}
 
@@ -595,7 +714,7 @@ fig.savefig('fig/lineplot2.pdf')
 
 
 \begin{frame}
-  \begin{exercise*}[3.D \emph{(Homework)}]
+  \begin{exercise*}[3.E]
 
     Write a function \texttt{plotfn(xs, f)} that takes two arguments:
     \begin{itemize}

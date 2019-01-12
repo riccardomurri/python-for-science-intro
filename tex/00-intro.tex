@@ -18,7 +18,7 @@
   \\
   University of Zurich
 }
-\date{June 7--8, 2018}
+\date{January 14, 2019}
 
 
 \begin{document}
@@ -50,6 +50,33 @@
 %     {\em \small{Want to know more? }\url{http://www.s3it.uzh.ch}}
 %   \end{center}
 % \end{frame}
+
+
+\begin{frame}
+  \frametitle{Who am I?}
+  \begin{center}
+    Systems administrator and programmer.
+    \\ \+
+    At UZH since 2010, first at GC3 then at S3IT.
+    \\ \+
+    Developer of open-source
+    Python packages since 2010.
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \begin{center}
+    {\Huge and what about you?}
+    \\ \+ \+
+    \small
+    Name \textbf{/}
+    Affiliation \textbf{/}
+    Interest in Python?~\textbf{/}
+    \\
+    Other known programming languages?
+  \end{center}
+\end{frame}
 
 
 \begin{frame}
@@ -91,7 +118,7 @@
 
 
 \begin{frame}
-  \frametitle{Talk outline}
+  \frametitle{Course outline}
   \begin{enumerate}
   \item Python basics
   \item NumPy and plotting
@@ -115,34 +142,6 @@
 
 \part{How to run Python code}
 
-\begin{frame}[fragile]
-  \frametitle{The Python shell, I}
-  Python is an \emph{interpreted} language.
-
-  \+
-  It also features an interactive
-  \href{http://en.wikipedia.org/wiki/REPL}{``shell''} for evaluating
-  expressions and statements immediately.
-
-  \+
-  The IPython shell is started by invoking the command
-  \texttt{ipython} in a terminal window.
-\begin{semiverbatim}\tiny
-\$ \textbf{ipython}
-Python 2.7.13 |Anaconda 4.3.0 (64-bit)| (default, Dec 20 2016, 23:09:15)
-Type "copyright", "credits" or "license" for more information.
-
-IPython 5.1.0 -- An enhanced Interactive Python.
-?         -> Introduction and overview of IPython's features.
-%quickref -> Quick reference.
-help      -> Python's own help system.
-object?   -> Details about 'object', use 'object??' for extra details.
-
-\textbf{In [1]:}{\color{blue}\normalfont\em \(\leftarrow\) here is where you enter commands}
-\end{semiverbatim}
-\end{frame}
-
-
 \begin{frame}
   \frametitle{The IPython notebook, I}
 
@@ -155,8 +154,8 @@ object?   -> Details about 'object', use 'object??' for extra details.
     \begin{column}{0.5\textwidth}
       \small
 
-      A more appealing way of interacting with Python is through the IPython
-      notebooks.
+      An appealing way of interacting with Python
+      is through \emph{IPython notebooks}.
 
       \+
       Notebooks are made of ``cells'', which come in two flavors:
@@ -184,6 +183,34 @@ object?   -> Details about 'object', use 'object??' for extra details.
     code cell marked with a {\ttfamily\bfseries\color{red} Out~[~]:} label.
   \end{itemize}
 
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{The Python shell, I}
+  Python is an \emph{interpreted} language.
+
+  \+
+  Python also features an interactive
+  \href{http://en.wikipedia.org/wiki/REPL}{``shell''} for evaluating
+  expressions and statements immediately.
+
+  \+
+  The IPython shell is started by invoking the command
+  \texttt{ipython} in a terminal window.
+\begin{semiverbatim}\tiny
+\$ \textbf{ipython}
+Python 2.7.13 |Anaconda 4.3.0 (64-bit)| (default, Dec 20 2016, 23:09:15)
+Type "copyright", "credits" or "license" for more information.
+
+IPython 5.1.0 -- An enhanced Interactive Python.
+?         -> Introduction and overview of IPython's features.
+%quickref -> Quick reference.
+help      -> Python's own help system.
+object?   -> Details about 'object', use 'object??' for extra details.
+
+\textbf{In [1]:}{\color{blue}\normalfont\em \(\leftarrow\) here is where you enter commands}
+\end{semiverbatim}
 \end{frame}
 
 
