@@ -230,13 +230,17 @@ The \texttt{*} operator also works on lists:
     other items are ``shited to the right'' to make place.
   \end{describe}
 
-  \begin{describe}{L.remove(x)}
-    Remove first occurence of item having value \texttt{x} from list~\texttt{L}.
-  \end{describe}
-
   \begin{describe}{L.pop(n)}
     Remove item at position \texttt{n} from list \texttt{L}.
   \end{describe}
+
+  \begin{describe}{L.extend(K)}
+    Graft a list \texttt{K} to the end of list \texttt{L}.
+  \end{describe}
+
+  \begin{references}
+    \url{https://docs.python.org/2/library/stdtypes.html#typesseq}
+  \end{references}
 \end{frame}
 
 
@@ -251,13 +255,46 @@ The \texttt{*} operator also works on lists:
     Return number of items in \texttt{L} having value \texttt{x}.
   \end{describe}
 
-  \begin{describe}{L.extend(K)}
-    Graft a list \texttt{K} to the end of list \texttt{L}.
+  \begin{describe}{L.remove(x)}
+    Remove first occurence of item having value \texttt{x} from list~\texttt{L}.
   \end{describe}
 
   \begin{references}
     \url{https://docs.python.org/2/library/stdtypes.html#typesseq}
   \end{references}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Operating on lists, III}
+
+  \begin{describe}{sorted(L)}
+    Return a copy of \texttt{L} with items sorted in ascending order.
+  \end{describe}
+
+  \begin{describe}{L.sort()}
+    \emph{Modify list \texttt{L}}, sorting it in ascending order in-place.
+  \end{describe}
+
+  \begin{describe}{reversed(L)}
+    Return a copy of \texttt{L} with items in reverse order as they occur in \texttt{L}.
+  \end{describe}
+
+  \begin{describe}{L.reverse()}
+    \emph{Modify list \texttt{L}}, reversing the order of its items in-place.
+  \end{describe}
+
+  \begin{references}
+    \url{https://docs.python.org/2/library/stdtypes.html#typesseq}
+  \end{references}
+\end{frame}
+
+
+\begin{frame}
+  \begin{exercise*}[3.B]
+    Write a function \texttt{median(L)} that takes a list \texttt{L}
+    of numbers and returns the median value.
+  \end{exercise*}
 \end{frame}
 
 
@@ -353,16 +390,28 @@ and to loop over a sequence in \textit{inverted} order you can use the
 
 
 \begin{frame}[fragile]
-  \begin{exercise*}[3.B]
+  \begin{exercise*}[3.C]
     Write a function \texttt{odd} that takes a list of integers and
     returns a list of all the odd ones.
   \end{exercise*}
 
   \+
-  \begin{exercise*}[3.C]
+  \begin{exercise*}[3.D]
     Write a function \texttt{deviation(L, m)} that takes a list \texttt{L} of
     numbers and a single value \texttt{m} returns a list with the difference of
     \texttt{m} and each element \texttt{x} of \texttt{L}.
+  \end{exercise*}
+
+  \+
+  \begin{exercise*}[3.E]
+    Write a function \texttt{randlist(N)} that returns a list of
+    \texttt{N} random numbers, each sampled uniformly from the real
+    interval $[0.0, 1.0)$.
+
+    \+
+    Python's standard module
+    \href{https://docs.python.org/3/library/random.html}{\texttt{random}}
+    provides functions to generate (pseudo-)random numbers.
   \end{exercise*}
 \end{frame}
 
@@ -429,7 +478,7 @@ def deviation(L, m):
   return map(delta, L)
 \end{python}
 \end{column}
-  \end{columns}
+\end{columns}
 \end{frame}
 
 
@@ -455,7 +504,7 @@ def deviation(L, m):
 
 \begin{frame}[fragile]
   \frametitle{Generators}
-  A \textbf{Generator} is a function that uses the \lstinline|yield| keyword instead of \lstinline|return|.
+  A \textbf{Generator} is a function that uses \\ the \lstinline|yield| keyword.
 
   \+
   \begin{columns}[c]
@@ -466,7 +515,7 @@ def until_quit():
     while reply != 'quit':
       ~\HL{\textbf{yield} ('->' + reply)}~
       reply = input()
-    # end
+    return
 \end{lstlisting}
     \end{column}
     \begin{column}{0.4\textwidth}
@@ -480,7 +529,7 @@ def until_quit():
 
 \begin{frame}[fragile]
   \frametitle{Generators, II}
-  A \textbf{Generator} is a function that uses the \lstinline|yield| keyword instead of \lstinline|return|.
+  A \textbf{Generator} is a function that uses \\ the \lstinline|yield| keyword.
 
   \+
   \begin{columns}[c]
@@ -491,12 +540,13 @@ def until_quit():
     while reply != 'quit':
       yield ('->' + reply)}
       reply = input()
-    ~\HL{\itshape \# end}~
+    ~\HL{\bfseries return}~
 \end{lstlisting}
     \end{column}
     \begin{column}{0.4\textwidth}
       \raggedleft
-      When execution reaches the end of the function,
+      When execution hits a \texttt{return}
+      (or the end of the function),
       iteration stops.
     \end{column}
   \end{columns}
@@ -529,7 +579,7 @@ quit
 
 
 \begin{frame}[fragile]
-  \begin{exercise*}[3.D]
+  \begin{exercise*}[3.F]
     The Collatz sequence is defined recursively as follows: given a
     number $x$, the next item $x'$ in the sequence is given by:
     \begin{itemize}
@@ -545,29 +595,26 @@ quit
 \end{frame}
 
 
-\part{Other containers}
-\begin{frame}
-  \frametitle{Other containers}
+\begin{frame}[fragile]
+  \frametitle{Generators, III}
 
-  The following builtin containers are always available:
-  \begin{description}
-  \item[dict] \textit{mutable} key/value mapping.
-  \item[set] \textit{mutable}, unordered set of \textit{unique} elements.
-  \item[frozenset] \textit{immutable}, unordered set of
-    \textit{unique} elements.
-  \end{description}
+  You can pull items out of a generator (more generally,
+  \emph{iterator}\/) using the \lstinline|next| built-in function.
 
-  \pause
-  Other specialized containers are available in the
-  \texttt{collections} module:
-
-  \begin{description}
-  \item[dequeue] a generalization of stacks and queues
-  \item[namedtuple] similar to a tuple, but allows you to access the
-    elements \textit{by name}
-  \item[OrderedDict] dictionary that remembers the order that the
-    items were inserted.
-  \end{description}
+  \+
+\begin{lstlisting}
+>>> def square(x):
+...   return x*x
+>>> g = map(square, [2, 7])
+>>> next(g)
+4
+>>> next(g)
+49
+>>> next(g)  # error!
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+\end{lstlisting}
 \end{frame}
 
 
@@ -714,7 +761,7 @@ fig.savefig('fig/lineplot2.pdf')
 
 
 \begin{frame}
-  \begin{exercise*}[3.E]
+  \begin{exercise*}[3.G]
 
     Write a function \texttt{plotfn(xs, f)} that takes two arguments:
     \begin{itemize}
