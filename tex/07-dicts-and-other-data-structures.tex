@@ -18,7 +18,7 @@
   \\
   University of Zurich
 }
-\date{June 7--8, 2018}
+\date{January 18/21, 2019}
 
 
 \begin{document}
@@ -375,6 +375,32 @@ TypeError: 'str' object does not support item assignment
         Table}, therefore keys of a dictionary must be \textit{hashable}
       objects.  If objects were allowed to mutate, their hash value
       would change too and we would lose the mapping.)}
+\end{frame}
+
+
+\part{Other containers}
+\begin{frame}
+  \frametitle{Other containers}
+
+  The following builtin containers are always available:
+  \begin{description}
+  \item[dict] \textit{mutable} key/value mapping.
+  \item[set] \textit{mutable}, unordered set of \textit{unique} elements.
+  \item[frozenset] \textit{immutable}, unordered set of
+    \textit{unique} elements.
+  \end{description}
+
+  \pause
+  Other specialized containers are available in the
+  \texttt{collections} module:
+
+  \begin{description}
+  \item[dequeue] a generalization of stacks and queues
+  \item[namedtuple] similar to a tuple, but allows you to access the
+    elements \textit{by name}
+  \item[OrderedDict] dictionary that remembers the order that the
+    items were inserted.
+  \end{description}
 \end{frame}
 
 
