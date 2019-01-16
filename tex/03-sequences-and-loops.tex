@@ -63,6 +63,13 @@
 >>> L = [ 'U', 'Z' ]
 \end{lstlisting}
 
+  \+
+  An empty list is created by a pair of square brackets with
+  nothing in between:
+\begin{lstlisting}
+>>> K = [ ]
+\end{lstlisting}
+
 \end{frame}
 
 \begin{frame}[fragile]
@@ -391,8 +398,8 @@ and to loop over a sequence in \textit{inverted} order you can use the
 
 \begin{frame}[fragile]
   \begin{exercise*}[3.C]
-    Write a function \texttt{odd} that takes a list of integers and
-    returns a list of all the odd ones.
+    Write a function \texttt{odd(L)} that takes a list \texttt{L} of
+    integers and returns a list of all the odd ones.
   \end{exercise*}
 
   \+
@@ -453,13 +460,13 @@ and to loop over a sequence in \textit{inverted} order you can use the
 
 
 \begin{frame}[fragile]
-  This is how you could rewrite Exercises~7 and~8 using \texttt{map} and
+  This is how you could rewrite Exercises~3.C and~3.D using \texttt{map} and
   \texttt{filter}.
 
   \begin{columns}
     \begin{column}{0.5\linewidth}
 \begin{python}
-# *** Exercise 3.B ***
+# *** Exercise 3.C ***
 def is_odd(x):
   return (x % 2 == 1)
 
@@ -469,7 +476,7 @@ def odd(L):
 \end{column}
 \begin{column}{0.5\linewidth}
 \begin{python}
-# *** Exercise 3.C ***
+# *** Exercise 3.D ***
 def deviation(L, m):
   # note: can define
   # func's in func's!
@@ -503,8 +510,36 @@ def deviation(L, m):
 
 
 \begin{frame}[fragile]
+  \frametitle{Iterators, II}
+
+  You can pull items out of an iterator using the \lstinline|next|
+  built-in function.
+
+  \+
+\begin{lstlisting}
+>>> def square(x):
+...   return x*x
+>>> g = map(square, [2, 7])
+>>> next(g)
+4
+>>> next(g)
+49
+>>> next(g)  # error: no more items!
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
   \frametitle{Generators}
-  A \textbf{Generator} is a function that uses \\ the \lstinline|yield| keyword.
+  \textbf{Generators} are special functions that implement an
+  iterator.
+
+  \+
+  A \textbf{Generator} is a function that uses \\ the
+  \lstinline|yield| keyword.
 
   \+
   \begin{columns}[c]
@@ -524,6 +559,11 @@ def until_quit():
       to the caller.
     \end{column}
   \end{columns}
+
+  \+
+  \begin{references}
+    \url{https://www.programiz.com/python-programming/generator}
+  \end{references}
 \end{frame}
 
 
@@ -550,6 +590,11 @@ def until_quit():
       iteration stops.
     \end{column}
   \end{columns}
+
+  \+
+  \begin{references}
+    \url{https://www.programiz.com/python-programming/generator}
+  \end{references}
 \end{frame}
 
 
@@ -587,35 +632,26 @@ quit
     \item $x' = 3x + 1$ if $x$ is odd.
     \end{itemize}
 
-    \+
-    Write a function \texttt{collatz} that takes a single starting
-    integer $x$, and iterates the Collatz sequence starting at $x$.
-    If $1$ is reached, iteration should stop.
+    \+ Write a function \texttt{collatz(x)} that takes a single starting
+    integer $x$, and iterates over the Collatz sequence starting at
+    $x$.  If $1$ is reached, iteration should stop.
   \end{exercise*}
 \end{frame}
 
 
-\begin{frame}[fragile]
-  \frametitle{Generators, III}
+% \begin{frame}[fragile]
+%   \begin{exercise*}[3.G]
+%     Given positive integer parameters $x_0$, $a$, $c$, and $m$, a
+%     \emph{linear congruential random number generator} (``LCG'' for
+%     short) is the unbounded integer sequence defined recursively
+%     by: \[x_{n+1} = a\cdot x_n + c \mod m.\]
 
-  You can pull items out of a generator (more generally,
-  \emph{iterator}\/) using the \lstinline|next| built-in function.
-
-  \+
-\begin{lstlisting}
->>> def square(x):
-...   return x*x
->>> g = map(square, [2, 7])
->>> next(g)
-4
->>> next(g)
-49
->>> next(g)  # error!
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-StopIteration
-\end{lstlisting}
-\end{frame}
+%     \+
+%     Write a generator \texttt{lcg(x0, a, c, m)} that takes the 4
+%     parameters defining a LCG, and iterates over the items $x_n$ one
+%     by one. (Would this generator stop?)
+%   \end{exercise*}
+% \end{frame}
 
 
 \part{Plotting basics}
@@ -627,6 +663,7 @@ plotting library in the Python community: it provides a large array of
 (mostly low level) facilities for making plots, and a more high-level
 interface largely inspired by MATLAB plotting system.
 
+\+
 \href{http://seaborn.pydata.org/index.html}{Seaborn} is an add-on
 library that provides:
 
@@ -649,6 +686,7 @@ library that provides:
 
 import matplotlib.pyplot as plt
 import seaborn as sea
+sea.set_style('darkgrid') # like R's ggplot()
   \end{python}
 
   \+ The same code (minus the \texttt{\%matplotlib inline} ``magic'') can be
@@ -703,107 +741,133 @@ import seaborn as sea
 
 
 \begin{frame}[fragile]
-  \frametitle{Line plots, IV}
-    Plotting different series of data in the same figure requires a bit more work.
-
-\begin{columns}
-    \begin{column}{0.5\linewidth}
-      \begin{python}
-fig, ax = plt.subplots(1, 1, figsize=[10, 7])
-
-# common x-axis items
-x = [0, 1, 2, 3]
-
-# three lines
-ax.plot(x, [0, 0, 0, 0])
-ax.plot(x, [0, 1, 2, 3])
-ax.plot(x, [0, 1, 4, 9])
-
-
-# save to file
-fig.savefig('fig/lineplot2.pdf')
-      \end{python}
-    \end{column}
-    \begin{column}{0.5\linewidth}
-      \begin{center}
-        \includegraphics[width=1.0\linewidth]{fig/lineplot2.pdf}
-      \end{center}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-
-\begin{frame}
-  \frametitle{Line plots, V}
-  Plotting different series of data in the same figure requires a bit more work.
-
-  \begin{enumerate}
-  \item
-    First use the
-    \href{http://matplotlib.org/api/pyplot_api.html\#matplotlib.pyplot.subplots}{\texttt{plt.subplots}}
-    function to create \emph{figure} and an \emph{axes} object
-  \item
-    An
-    \href{http://matplotlib.org/api/axes_api.html\#matplotlib.axes.Axes}{\emph{axes}
-      object} is a ``frame'' for a single plot -- use methods
-    \href{http://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html\#matplotlib.axes.Axes.plot}{\texttt{.plot()}}
-    to lay a graph onto the canvas. Each invocation of
-    \href{http://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html\#matplotlib.axes.Axes.plot}{\texttt{.plot()}}
-    \emph{adds} a plot onto the canvas.
-  \item
-    The
-    \href{http://matplotlib.org/api/figure_api.html\#matplotlib.figure.Figure}{\emph{figure}
-      object} contains all the axes can be used for saving the final output
-    with
-    \href{http://matplotlib.org/api/figure_api.html\#matplotlib.figure.Figure.savefig}{\texttt{.savefig()}}
-\end{enumerate}
-\end{frame}
-
-
-\begin{frame}
   \begin{exercise*}[3.G]
 
-    Write a function \texttt{plotfn(xs, f)} that takes two arguments:
-    \begin{itemize}
-    \item a sequence of numbers \texttt{xs}, and
-    \item a function \texttt{f}, which takes one single argument (a number) and
-      returns a number.
-    Function \texttt{plotfn()} should display a line plot of the mathematical
-    function \texttt{f} over the set of numbers \texttt{xs}.
+\begin{semiverbatim}\small
+\In \,\,x = [0, 1, 2, 3, 4, 5]
+\In \,\,y = x
+\In \HL{plt.plot(x, y)}
+\Out [<matplotlib.lines.Line2D at 0x7fe8a3454750>]
+\end{semiverbatim}
 
-    \+ \textbf{Bonus points:} Change the \texttt{plotfn()} function so to take
-    an additional argument (a file name) and save the figure into that file.
+    How can you make the line in this line plot \textcolor{red}{red}?
 
-    \+ \textbf{More bonus points:} Change the \texttt{plotfn} function so to
-    take a \emph{list} of mathematical functions \texttt{fs} and plot all of them.
-    \end{itemize}
+    \+
+    How can you make it \textbf{thicker}?
   \end{exercise*}
 \end{frame}
 
 
-\begin{frame}
-  \frametitle{Scatter plots}
+% \begin{frame}[fragile]
+%   \frametitle{Line plots, IV}
+%     Plotting different series of data in the same figure requires a bit more work.
 
-  Use the \texttt{plt.scatter(x, y)} function.
+% \begin{columns}
+%     \begin{column}{0.5\linewidth}
+%       \begin{python}
+% fig, ax = plt.subplots(1, 1, figsize=[10, 7])
 
-  \+
-  Everything else works as in line plots.
-\end{frame}
+% # common x-axis items
+% x = [0, 1, 2, 3]
+
+% # three lines
+% ax.plot(x, [0, 0, 0, 0])
+% ax.plot(x, [0, 1, 2, 3])
+% ax.plot(x, [0, 1, 4, 9])
 
 
-\begin{frame}[fragile]
-  \frametitle{Bar plots}
+% # save to file
+% fig.savefig('fig/lineplot2.pdf')
+%       \end{python}
+%     \end{column}
+%     \begin{column}{0.5\linewidth}
+%       \begin{center}
+%         \includegraphics[width=1.0\linewidth]{fig/lineplot2.pdf}
+%       \end{center}
+%     \end{column}
+%   \end{columns}
+% \end{frame}
 
-  Use Seaborn's \texttt{sea.barplot(x, y)} function.
 
-  \+
-  Everything else works \emph{almost} as in line plots; when you need to plot
-  onto an axis (the \texttt{ax} object of previous examples), then you need to
-  pass the axis as an additional parameter:
-\begin{semiverbatim}
-sea.barplot(x, y, ax=ax)
-\end{semiverbatim}
-\end{frame}
+% \begin{frame}
+%   \frametitle{Line plots, V}
+%   Plotting different series of data in the same figure requires a bit more work.
+
+%   \begin{enumerate}
+%   \item
+%     First use the
+%     \href{http://matplotlib.org/api/pyplot_api.html\#matplotlib.pyplot.subplots}{\texttt{plt.subplots}}
+%     function to create \emph{figure} and an \emph{axes} object
+%   \item
+%     An
+%     \href{http://matplotlib.org/api/axes_api.html\#matplotlib.axes.Axes}{\emph{axes}
+%       object} is a ``frame'' for a single plot -- use methods
+%     \href{http://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html\#matplotlib.axes.Axes.plot}{\texttt{.plot()}}
+%     to lay a graph onto the canvas. Each invocation of
+%     \href{http://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html\#matplotlib.axes.Axes.plot}{\texttt{.plot()}}
+%     \emph{adds} a plot onto the canvas.
+%   \item
+%     The
+%     \href{http://matplotlib.org/api/figure_api.html\#matplotlib.figure.Figure}{\emph{figure}
+%       object} contains all the axes can be used for saving the final output
+%     with
+%     \href{http://matplotlib.org/api/figure_api.html\#matplotlib.figure.Figure.savefig}{\texttt{.savefig()}}
+% \end{enumerate}
+% \end{frame}
+
+
+% \begin{frame}
+%   \begin{exercise*}[3.G]
+
+%     Write a function \texttt{plotfn(xs, f)} that takes two arguments:
+%     \begin{itemize}
+%     \item a sequence of numbers \texttt{xs}, and
+%     \item a function \texttt{f}, which takes one single argument (a number) and
+%       returns a number.
+%     Function \texttt{plotfn()} should display a line plot of the mathematical
+%     function \texttt{f} over the set of numbers \texttt{xs}.
+
+%     \+ \textbf{Bonus points:} Change the \texttt{plotfn()} function so to take
+%     an additional argument (a file name) and save the figure into that file.
+
+%     \+ \textbf{More bonus points:} Change the \texttt{plotfn} function so to
+%     take a \emph{list} of mathematical functions \texttt{fs} and plot all of them.
+%     \end{itemize}
+%   \end{exercise*}
+% \end{frame}
+
+
+% \begin{frame}[fragile]
+%   \frametitle{Scatter plots}
+
+%   Use the \texttt{plt.scatter(x, y)} function.
+
+%   \+
+% \begin{semiverbatim}\small
+% \In \,\,x = randlist(100)
+% \In \,\,y = randlist(100)
+% \In \HL{plt.scatter(x, y)}
+% \Out [<matplotlib.collections.PathCollection \ldots]
+% \end{semiverbatim}
+%   \begin{center}
+%     \includegraphics[height=0.50\textheight]{fig/scatterplot.pdf}
+%   \end{center}
+% \end{frame}
+
+
+% \begin{frame}[fragile]
+%   \frametitle{Bar plots}
+
+%   Use Seaborn's \texttt{sea.barplot(x, y)} function.
+
+%   \+
+%   Everything else works \emph{almost} as in line plots; when you need to plot
+%   onto an axis (the \texttt{ax} object of previous examples), then you need to
+%   pass the axis as an additional parameter:
+% \begin{semiverbatim}
+% sea.barplot(x, y, ax=ax)
+% \end{semiverbatim}
+% \end{frame}
 
 
 \part{Appendix}
