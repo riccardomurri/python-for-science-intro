@@ -225,10 +225,10 @@ greet("world")
 
   Function arguments can have default values.
 \begin{lstlisting}
->>> def hello(name='world'):
+>>> def greet(name='world'):
 ...   print ("Hello, " + name)
 ...
->>> hello()
+>>> greet()
 'Hello, world'
 \end{lstlisting}
 \end{frame}
@@ -238,7 +238,7 @@ greet("world")
   \frametitle{Named arguments}
 Python allows calling a function with named arguments:
 \begin{lstlisting}
-hello(name="Alice")
+greet(name="Alice")
 \end{lstlisting}
 
 \+
@@ -319,6 +319,29 @@ else:
 
     \pause{There's no `end if': indentation delimits blocks!}
   \end{question}
+\end{frame}
+
+
+\begin{frame}[fragile,fragile]
+  \frametitle{Truth values}
+  For the purpose of evaluating the truth value of an expression,
+  the following rules apply:
+  \begin{itemize}
+  \item \texttt{False}, \texttt{0}, \lstinline|''| (empty string), and
+    \emph{any empty sequence} evaluate to boolean \lstinline|False|;
+  \item any other value is converted to \lstinline|True|.
+  \end{itemize}
+
+  \+
+  You can always check the truth value of an expression with the
+  \lstinline|bool| function:
+
+\begin{lstlisting}
+>>> bool(0)
+False
+>>> bool('no')
+True
+\end{lstlisting}
 \end{frame}
 
 
