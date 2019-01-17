@@ -1,0 +1,10 @@
+NAME,EXITCODE,MEM,WALLTIME,CPUTIME
+check_image_set-make_batch_folder,0,0,0,0.004
+check_image_set-check_image_set,0,0,5,0.836
+convert_tiff_to_png-clean_up,0,0,1,0.072
+convert_tiff_to_png-create_new_batch,0,0,4,0.488
+convert_tiff_to_png-convert_PNGs_listfiles,0,0,1,0.176
+convert_tiff_to_png-convert_PNGs_run__p0,0,0,0,0
+illum_corr-prepare_batches,0,0,19,13.96
+illum_corr-illumination_statistics_listfiles,0,0,0,0.14
+illum_corr-illumination_statistics_run__p0,0,3048,1475,1197.56

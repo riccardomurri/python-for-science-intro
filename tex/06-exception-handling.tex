@@ -27,7 +27,7 @@
 \maketitle
 
 
-\part{Exception handling}
+%\part{Exception handling}
 
 \begin{frame}[fragile]
   \frametitle{Exceptions}
@@ -146,14 +146,14 @@ if an_error_occurred:
 \begin{frame}
   \begin{exercise*}[6.A]
     Try loading file \texttt{values2.txt} with the \lstinline`load_data()`
-    function from Exercise~4.A -- what exception does Python raise?
+    function from Exercise~5.D -- what exception does Python raise?
 
     \+
     Edit the \lstinline`load_data()` function into a \lstinline`load_data2()`
     that \emph{ignores} any line that does not contain an integer number.
 
     \+
-    Bonus points if you can write \lstinline`load_data2()` so that it has
+    \textbf{Advanced:} can you write \lstinline`load_data2()` so that it has
     exactly the same output of \lstinline`load_data()`, i.e. minimize the number
     of rejected input lines.
   \end{exercise*}
@@ -162,9 +162,17 @@ if an_error_occurred:
 \begin{frame}
   \begin{exercise*}[6.B]
     Write a function \lstinline|read_csv(p)| which reads a CSV
-    (\emph{Comma-sSparated Values}) file and returns a list of all
+    (\emph{Comma-Separated Values}) file and returns a list of all
     rows in it.  A \emph{row} will be represented as a Python list of
     (string) items.
+
+    \+ \textbf{Advanced:} Make \lstinline|read_csv(p)| into a
+    generator that iterates over rows.
+
+    \+ \textbf{More advanced:} How would you modify
+    \lstinline|read_csv()| so that it is possible to specify what
+    types the CSV file's columns are?  Can you implement it so that a
+    row is a list of items of the right type (i.e., not all strings)?
   \end{exercise*}
 
 \end{frame}
