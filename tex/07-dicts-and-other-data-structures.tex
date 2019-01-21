@@ -35,7 +35,7 @@
   \frametitle{Dictionaries}
   The \texttt{dict} type implements a key/value mapping:
 \begin{lstlisting}
->>> D = { }
+>>> D = { }  # empty dict
 >>> D['a'] = 1
 >>> D[2] = 'b'
 >>> D
@@ -74,6 +74,7 @@
   \end{columns}
 \end{frame}
 
+
 \begin{frame}[fragile]
   If you want to loop over dictionary \emph{values}, you have to
   explicitly request it.
@@ -82,7 +83,7 @@
   \begin{columns}[c]
     \begin{column}{0.5\textwidth}
 \begin{lstlisting}
->>> D = dict(a=1, b=2)
+>>> D = { 'a':1, 'b':2 }
 >>> for val in ~\HL{D.values()}~:
 ...   print(val)
 1
@@ -94,6 +95,32 @@
       Loop over dictionary~\emph{values}
 
       \emph{The \texttt{.values()} cannot be omitted!}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  Finally, you can request keys \emph{and} corresponding values with
+  the \texttt{.items()} iterator:
+
+  \+
+  \begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+\begin{lstlisting}
+>>> D = { 'a':1, 'b':2 }
+>>> for key, val in ~\HL{D.items()}~:
+...   print(key, '=>', val)
+a=>1
+b=>2
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \raggedleft
+      Loop over dictionary~\emph{items}.
+
+      \+
+      Note the syntax for multiple-assignment!
     \end{column}
   \end{columns}
 \end{frame}
@@ -125,7 +152,7 @@
     (disregarding case) of that word in the text.
 
     \+ For example, using the
-    \href{https://raw.github.com/gc3-uzh-ch/python-course/master/lorem_ipsum.txt}{lorem\_ipsum.txt}
+    \href{https://github.com/riccardomurri/python-for-science-intro/blob/master/exercises/lipsum.txt}{lipsum.txt}
     file:
     \begin{lstlisting}
 >>> wordcount('lipsum.txt')
@@ -141,7 +168,72 @@
 \end{frame}
 
 
-\subsection{All variables are references}
+\part{Bar plots}
+
+\begin{frame}[fragile]
+  \frametitle{Bar plots, I}
+  \small
+  Seaborn's \texttt{barplot()} function can be used \\ to draw bar plots.
+
+  \+
+\begin{semiverbatim}\small
+\In \,\,x = [0, 1, 2, 3, 4, 5]
+\In \,\,y = [3, 1, 2, 4, 0, 5]
+\In \HL{seaborn.barplot(x, y)}
+\end{semiverbatim}
+  \begin{center}
+    \includegraphics[height=0.50\textheight]{fig/barplot0.pdf}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Bar plots, II}
+  \small
+  \only<1>{%
+    An additional argument \texttt{orient=...} can be used to give:
+    \begin{itemize}
+    \item   vertical orientation (\texttt{orient='v'}, default), \emph{or}
+    \item horizontal (\texttt{orient='h'}).
+    \end{itemize}
+  }%
+  \only<2>{%
+    Note that the role of \texttt{x} and \texttt{y} parameters is
+    \emph{reversed} in horizontal plots: \texttt{x} is the size of bars,
+    \texttt{y} is the labels.
+  }%
+
+\begin{semiverbatim}\small
+\In \,\,x = [0, 1, 2, 3, 4, 5]
+\In \,\,y = [3, 1, 2, 4, 0, 5]
+\In \HL{seaborn.barplot(y, x, orient='h')}
+\end{semiverbatim}
+  \begin{center}
+    \includegraphics[height=0.50\textheight]{fig/barplot0.pdf}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \frametitle{Bar plots, III}
+  \small
+
+    Arguments \texttt{x} and \texttt{y} can be Python lists or NumPy arrays, as usual.
+
+    \+
+    Another variant (available in all Seaborn plotting functions)
+    is to pass a PanDas \texttt{DataFrame} object with the
+    \texttt{data=...} argument, and then \texttt{x} and \texttt{y}
+    become names of columns in the data frame.
+
+    \+
+\begin{semiverbatim}
+seaborn.barplot(data=csv, x="word", y="frequency")
+\end{semiverbatim}
+\end{frame}
+
+
+\part{References and copies}
 
 \begin{frame}[fragile]
   \frametitle{Variables are names for values}

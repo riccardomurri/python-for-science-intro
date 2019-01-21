@@ -18,7 +18,7 @@
   \\
   University of Zurich
 }
-\date{January 18, 2019}
+\date{January 21, 2019}
 
 
 \begin{document}
@@ -136,6 +136,42 @@ item assignment
 \end{frame}
 
 
+\begin{frame}
+  \frametitle{Modifying strings}
+  Python strings are \emph{immutable} so direct modification is not allowed.
+
+  \+
+  There are two options to modify strings:
+  \begin{itemize}
+  \item Use built-in operations (just seen)
+  \item Convert to list (which is mutable) and back to string
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile,fragile]
+  \frametitle{String to list and back}
+  The \texttt{list()} constructor will convert a string into a list of
+  its constituent characters:
+\begin{semiverbatim}
+\In s = 'uzh'
+\In l = list(s)
+\In print(l)
+\Out ['u', 'z', 'h']
+\end{semiverbatim}
+
+  \+
+  Conversely, \texttt{s.join(L)} will join all strings in
+  \texttt{L}, interposing occurences of \texttt{s}:
+\begin{semiverbatim}
+\In '-'.join(l)
+\Out 'u-z-h'
+\In ''.join(l)  # empty string as separator
+\Out 'uzh'
+\end{semiverbatim}
+\end{frame}
+
+
 \part{File I/O}
 
 \begin{frame}[fragile]
@@ -166,8 +202,7 @@ with ~\HL{open(filename, 'r')}~ as stream:
   and/or writing.
 
   \+ Mode is one of '\texttt{r}', '\texttt{w}' or '\texttt{a}' for reading,
-  writing (truncates on open), appending. You can add a `\texttt{+}' character
-  to enable read+write (other effects being the same).
+  overwriting (truncates on open), appending. Details two slides forward!
 \end{frame}
 
 
@@ -317,8 +352,8 @@ with open(filename, 'r') as stream:
   \end{exercise*}
 
   \begin{exercise*}[5.E]
-    Write a function \lstinline|fgrep(s, p)| which returns a list of
-    all lines in file \texttt{p} which contain string \texttt{s}.
+    Write a function \lstinline|fgrep(pattern, filename)| which returns a list of
+    all lines in file \texttt{filename} which contain string \texttt{pattern}.
   \end{exercise*}
 \end{frame}
 
