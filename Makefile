@@ -12,6 +12,7 @@ usage:
 
 # clean up temporary LaTeX files
 clean:
+	rm -f *~ *.aux *.log *.nav *.out *.rel *.snm *.toc *.vrb
 	cd tex && rm -f *~ *.aux *.log *.nav *.out *.rel *.snm *.toc *.vrb
 
 
